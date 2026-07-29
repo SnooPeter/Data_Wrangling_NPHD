@@ -41,3 +41,21 @@ calculated_host_listings_count = The number of listings the host has in the curr
 availability_365 = avaliability_x. The availability of the listing x days in the future as determined by the calendar. Note a listing may not be available because it has been booked by a guest or blocked by the host.
 number_of_reviews_ltm = The number of reviews the listing has (in the last 12 months)
 license = The licence/permit/registration number
+
+
+
+
+# Dataset Source
+
+This project uses the June 2026 New Zealand Airbnb listings dataset provided by Inside Airbnb.
+
+Dataset: listings.csv (not listings.csv.gz)
+Country: New Zealand
+Snapshot: June 2026
+Source: Inside Airbnb – Get the Data
+https://insideairbnb.com/get-the-data/
+About the Dataset
+
+Inside Airbnb is an independent, non-commercial project that provides publicly available Airbnb listing data for research and analysis. The data is collected from publicly accessible information on the Airbnb website and is intended to help researchers, policymakers, and the public better understand the short-term rental market.
+
+For this project, the dataset is stored locally on each team member's computer because of its large file size. The dataset is not stored in the GitHub repository.
