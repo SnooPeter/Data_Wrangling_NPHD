@@ -1,0 +1,8 @@
+{
+    "date-input-14": {
+        "label": "Label",
+        "type": "string",
+        "format": "ZonedDateTime",
+        "default": "2026-06-16T01:07:13+12:00[Pacific/Auckland]"
+    }
+}

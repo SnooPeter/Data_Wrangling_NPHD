@@ -1,0 +1,26 @@
+{
+    "date-input-14": {
+        "@class": "org.knime.js.base.node.configuration.input.date.DateDialogNodeRepresentation",
+        "label": "Label",
+        "description": "Enter Description",
+        "required": true,
+        "defaultValue": {
+            "@class": "org.knime.js.base.node.configuration.input.date.DateDialogNodeValue",
+            "datestring": "2026-06-16T01:07:13+12:00[Pacific/Auckland]"
+        },
+        "currentValue": {
+            "@class": "org.knime.js.base.node.configuration.input.date.DateDialogNodeValue",
+            "datestring": "2026-06-16T01:07:13+12:00[Pacific/Auckland]"
+        },
+        "shownowbutton": true,
+        "granularity": "show_minutes",
+        "usemin": false,
+        "usemax": false,
+        "useminexectime": false,
+        "usemaxexectime": false,
+        "usedefaultexectime": false,
+        "min": "2026-07-30T01:07:13+12:00[Pacific/Auckland]",
+        "max": "2026-07-30T01:07:13+12:00[Pacific/Auckland]",
+        "type": "LD"
+    }
+}
