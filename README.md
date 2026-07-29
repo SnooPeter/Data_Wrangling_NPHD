@@ -31,7 +31,7 @@ Group Project for Data Wrangling
 
 This project uses the June 2026 New Zealand Airbnb listings dataset provided by Inside Airbnb.
 
-Dataset: listings.csv (not listings.csv.gz)
+Dataset: listings.csv 
 Country: New Zealand
 Snapshot: June 2026
 Source: Inside Airbnb – Get the Data
