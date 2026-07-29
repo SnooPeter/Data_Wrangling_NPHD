@@ -46,7 +46,7 @@ Source: Inside Airbnb – Get the Data
 https://insideairbnb.com/get-the-data/
 
 
-*About the Dataset*
+**About the Dataset**
 
 Inside Airbnb is an independent, non-commercial project that provides publicly available Airbnb listing data for research and analysis. The data is collected from publicly accessible information on the Airbnb website and is intended to help researchers, policymakers, and the public better understand the short-term rental market.
 
