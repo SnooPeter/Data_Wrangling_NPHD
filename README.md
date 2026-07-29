@@ -1,6 +1,5 @@
 # Data_Wrangling_NHPD
-Group Project for Data Wrangling
-
+This is DATA201-DATA422 collaborative project. We will be making Christchurch Rental Market Research Project using New Zealand **AirBnb** and **Tenancy Services** Data for our project.
 ## Dataset Columns
 
 | Column                             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
