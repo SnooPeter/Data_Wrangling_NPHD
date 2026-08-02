@@ -13,7 +13,7 @@
                     <config key="path">
                         <entry key="location_present" type="xboolean" value="true"/>
                         <entry key="file_system_type" type="xstring" value="LOCAL"/>
-                        <entry key="path" type="xstring" value="C:\Users\danie\OneDrive - University of Canterbury\2026_S2\DATA422\Raw Data\listings.july2026.csv"/>
+                        <entry key="path" type="xstring" value="/Users/peterra/OneDrive - University of Canterbury/MADS/26S2/DATA422/DATA422 Labs/W4 Deliverable 2/listings.csv"/>
                     </config>
                     <entry key="includeSubfolders" type="xboolean" value="false"/>
                     <config key="filters">
@@ -130,11 +130,11 @@
                 </config>
             </config>
         </config>
-        <entry key="sourceId_Internals" type="xstring" value="C:\Users\danie\OneDrive - University of Canterbury\2026_S2\DATA422\Raw Data\listings.july2026.csv"/>
+        <entry key="sourceId_Internals" type="xstring" value="/Users/peterra/OneDrive - University of Canterbury/MADS/26S2/DATA422/DATA422 Labs/W4 Deliverable 2/listings.csv"/>
         <config key="transformationParameters">
             <config key="specs">
                 <config key="0">
-                    <entry key="sourceIdentifier" type="xstring" value="C:\Users\danie\OneDrive - University of Canterbury\2026_S2\DATA422\Raw Data\listings.july2026.csv"/>
+                    <entry key="sourceIdentifier" type="xstring" value="/Users/peterra/OneDrive - University of Canterbury/MADS/26S2/DATA422/DATA422 Labs/W4 Deliverable 2/listings.csv"/>
                     <config key="spec">
                         <config key="0">
                             <entry key="name" type="xstring" value="name"/>
@@ -225,7 +225,7 @@
                     <config key="fsLocation">
                         <entry key="location_present" type="xboolean" value="true"/>
                         <entry key="file_system_type" type="xstring" value="LOCAL"/>
-                        <entry key="path" type="xstring" value="C:\Users\danie\OneDrive - University of Canterbury\2026_S2\DATA422\Raw Data\listings.july2026.csv"/>
+                        <entry key="path" type="xstring" value="/Users/peterra/OneDrive - University of Canterbury/MADS/26S2/DATA422/DATA422 Labs/W4 Deliverable 2/listings.csv"/>
                     </config>
                 </config>
             </config>
@@ -783,6 +783,6 @@
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" value="b146802f-32dd-4942-b8a5-8e04fd8a26a6"/>
+        <entry key="file_store_id" type="xstring" value="2eaf7cd4-eedc-42cb-8e01-1ccac90ed712"/>
     </config>
 </config>
