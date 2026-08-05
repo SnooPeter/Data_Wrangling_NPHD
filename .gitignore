@@ -221,3 +221,18 @@ __marimo__/
 .knimeLock
 
 KNIME/NPHD Pipeline/.metadata/
+
+# KNIME temporary files
+.metadata/
+*.log
+
+# Windows files
+desktop.ini
+*.lnk
+
+# Mac files
+.DS_Store
+
+# Python cache
+__pycache__/
+*.pyc
