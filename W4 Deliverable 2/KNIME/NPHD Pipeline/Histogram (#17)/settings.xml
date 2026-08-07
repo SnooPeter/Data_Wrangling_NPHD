@@ -11,14 +11,14 @@
         <entry key="width" type="xint" value="800"/>
         <entry key="height" type="xint" value="600"/>
         <entry key="dimensionV3" type="xstring" value="Date&amp;Time Difference"/>
-        <entry key="binningType" type="xstring" value="EQUAL_WIDTH"/>
-        <entry key="nBins" type="xint" value="10"/>
+        <entry key="binningType" type="xstring" value="CUSTOM_CUTOFFS"/>
+        <entry key="nBins" type="xint" value="50"/>
         <entry key="hasIntegerCutoff" type="xboolean" value="true"/>
         <entry key="hasFixedLowerBound" type="xboolean" value="true"/>
         <entry key="lowerBound" type="xdouble" value="0.0"/>
         <entry key="hasFixedUpperBound" type="xboolean" value="true"/>
         <entry key="upperBound" type="xdouble" value="5000.0"/>
-        <entry key="customBinCutoff" type="xstring" value="0,30,60,90,180,365,99999"/>
+        <entry key="customBinCutoff" type="xstring" value="0,30,60,90,180,365,999"/>
         <entry key="specialValueHandling" type="xstring" value="IGNORE"/>
     </config>
     <config key="variables"/>
@@ -157,30 +157,10 @@
                 <entry key="type" type="xstring" value="table"/>
                 <entry key="table_dir_location" type="xstring" value="object_15"/>
             </config>
-            <config key="object_16">
-                <entry key="index" type="xint" value="16"/>
-                <entry key="type" type="xstring" value="table"/>
-                <entry key="table_dir_location" type="xstring" value="object_16"/>
-            </config>
-            <config key="object_17">
-                <entry key="index" type="xint" value="17"/>
-                <entry key="type" type="xstring" value="table"/>
-                <entry key="table_dir_location" type="xstring" value="object_17"/>
-            </config>
-            <config key="object_18">
-                <entry key="index" type="xint" value="18"/>
-                <entry key="type" type="xstring" value="table"/>
-                <entry key="table_dir_location" type="xstring" value="object_18"/>
-            </config>
-            <config key="object_19">
-                <entry key="index" type="xint" value="19"/>
-                <entry key="type" type="xstring" value="table"/>
-                <entry key="table_dir_location" type="xstring" value="object_19"/>
-            </config>
         </config>
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" value="12e2b3a8-ee0f-487e-834f-321787f600fc"/>
+        <entry key="file_store_id" type="xstring" value="7af06d34-5e7e-485c-b8e0-a42e33c8dffc"/>
     </config>
 </config>

@@ -6,13 +6,13 @@
             <entry key="type" type="xstring" value="variable"/>
             <entry key="name" type="xstring" value="date-input"/>
             <entry key="class" type="xstring" value="STRING"/>
-            <entry key="value" type="xstring" value="2026-06-16"/>
+            <entry key="value" type="xstring" value="2026-06-23"/>
         </config>
         <config key="Variable_1">
             <entry key="type" type="xstring" value="variable"/>
             <entry key="name" type="xstring" value="date-input"/>
             <entry key="class" type="xstring" value="STRING"/>
-            <entry key="value" type="xstring" value="2026-06-16"/>
+            <entry key="value" type="xstring" value="2026-06-23"/>
         </config>
     </config>
     <config key="internal_node_subsettings">
@@ -20,7 +20,7 @@
     </config>
     <config key="model">
         <config key="defaultValue">
-            <entry key="date&amp;time" type="xstring" value="2026-06-16T01:07:13+12:00[Pacific/Auckland]"/>
+            <entry key="date&amp;time" type="xstring" value="2026-06-23T01:07:13+12:00[Pacific/Auckland]"/>
         </config>
         <entry key="hideInDialog" type="xboolean" value="false"/>
         <entry key="parameterName" type="xstring" value="date-input"/>
@@ -68,6 +68,6 @@
     </config>
     <config key="filestores">
         <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-        <entry key="file_store_id" type="xstring" value="f683261a-ea89-4603-98bd-0649839b0e25"/>
+        <entry key="file_store_id" type="xstring" value="52913014-55dd-4083-9c6d-d46d2abf53f0"/>
     </config>
 </config>

@@ -225,6 +225,10 @@ KNIME/NPHD Pipeline/.metadata/
 # KNIME temporary files
 .metadata/
 *.log
+data.zip
+portobject.zip
+spec.zip
+spec.xml
 
 # Windows files
 desktop.ini
@@ -236,3 +240,4 @@ desktop.ini
 # Python cache
 __pycache__/
 *.pyc.DS_Store
+
