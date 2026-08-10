@@ -1,0 +1,45 @@
+def summary_statistics(df: pd.DataFrame):
+    print("\n===== SUMMARY STATISTICS =====\n")
+
+    # Missing values for every column
+    missing = pd.DataFrame({
+        "Missing": df.isna().sum(),
+        "Missing %": (df.isna().mean() * 100).round(2),
+        "Non-Missing": df.notna().sum()
+    })
+
+    print("Missing Values:")
+    print(missing)
+
+    # Numerical columns
+    numeric_cols = df.select_dtypes(include="number").columns
+
+    print("\n===== NUMERICAL COLUMNS =====\n")
+    numeric_summary = df[numeric_cols].agg(
+        ["count", "min", "max", "mean", "median", "std"]
+    ).T
+
+    numeric_summary["missing"] = df[numeric_cols].isna().sum()
+
+    print(numeric_summary)
+
+    # Categorical columns
+    categorical_cols = df.select_dtypes(include=["object", "category"]).columns
+
+    print("\n===== CATEGORICAL COLUMNS =====\n")
+
+    for col in categorical_cols:
+        print(f"\n{col}")
+        print(f"Number of unique categories: {df[col].nunique(dropna=True)}")
+        print(f"Missing values: {df[col].isna().sum()}")
+        print("\nCategory counts:")
+        print(df[col].value_counts(dropna=False).head(10))
+
+if __name__ == "__main__":
+    data = load_data(INPUT_PATH)
+
+    summary_statistics(data)
+
+    price_histogram(data)
+    days_since_last_review_histogram(data)
+    top_10_percent_reviews(data)
