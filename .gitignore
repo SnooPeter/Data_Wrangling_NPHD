@@ -241,3 +241,4 @@ desktop.ini
 __pycache__/
 *.pyc.DS_Store
 
+.vscode/settings.json
