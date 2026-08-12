@@ -104,3 +104,86 @@ if __name__ == "__main__":
     input_path = find_input_path()
     df = load_data(input_path)
     summary_statistics(df)
+
+
+# ------------------------------------------------------------------
+# REPRODUCE KNIME PLOTS USING concatenate_chch.csv
+# ------------------------------------------------------------------
+def create_knime_plots(df: pd.DataFrame, output_dir: Path | str) -> None:
+    import matplotlib.pyplot as plt
+
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # 1. Price histogram for the filtered Christchurch data.
+    priced = df.dropna(subset=["price"]).copy()
+    priced = priced[priced["price"] <= 2000]
+
+    fig, ax = plt.subplots(figsize=(9, 5))
+    bins = range(0, 2001, 100)
+    ax.hist(
+        priced["price"], bins=bins, color="#DD8452"
+    )
+    ax.set_xlabel("Price ($NZD)")
+    ax.set_ylabel("Number of records")
+    ax.set_title("Price Distribution — Christchurch City")
+    fig.tight_layout()
+    fig.savefig(output_dir / "price_histogram_concatenated.png", dpi=150)
+    plt.show()
+    plt.close(fig)
+
+    # 2. Days since last review, using the KNIME snapshot reference date.
+    reviewed = df.dropna(subset=["last_review"]).copy()
+    reference_date = pd.Timestamp("2026-06-16")
+    reviewed["days_since_last_review"] = (
+        reference_date - reviewed["last_review"]
+    ).dt.days
+    reviewed = reviewed[reviewed["days_since_last_review"].between(0, 999)]
+
+    fig, ax = plt.subplots(figsize=(9, 5))
+    review_bins = [0, 30, 60, 90, 180, 365, 999]
+    ax.hist(
+        reviewed["days_since_last_review"],
+        bins=review_bins,
+        color="#55A868",
+    )
+    ax.set_xticks(review_bins)
+    ax.set_xlabel("Days since last review")
+    ax.set_ylabel("Number of records")
+    ax.set_title("Distribution of Days Since Last Review")
+    fig.tight_layout()
+    fig.savefig(output_dir / "days_since_last_review_concatenated.png", dpi=150)
+    plt.show()
+    plt.close(fig)
+
+    # 3. Top 10% most-reviewed records and their Christchurch subset.
+    ranked = df.dropna(subset=["number_of_reviews"]).copy()
+    ranked["rank"] = ranked["number_of_reviews"].rank(
+        method="min", ascending=False
+    )
+    top_10_percent = ranked[ranked["rank"] <= len(ranked) * 0.1]
+    all_count = len(top_10_percent)
+    christchurch_count = (
+        top_10_percent["neighbourhood_group"] == "Christchurch City"
+    ).sum()
+
+    fig, ax = plt.subplots(figsize=(7, 5))
+    labels = ["All concatenated records", "Christchurch City"]
+    counts = [all_count, christchurch_count]
+    bars = ax.bar(labels, counts, color=["#4C72B0", "#DD8452"])
+    ax.bar_label(bars, padding=3)
+    ax.set_ylabel("Number of records")
+    ax.set_title("Top 10% Most-Reviewed Records")
+    ax.set_ylim(0, max(max(counts) * 1.12, 1))
+    fig.tight_layout()
+    fig.savefig(output_dir / "top_10_percent_reviews_concatenated.png", dpi=150)
+    plt.show()
+    plt.close(fig)
+
+    print(f"\nKNIME-style plots saved to: {output_dir.resolve()}")
+
+
+if __name__ == "__main__":
+    script_file = globals().get("__file__")
+    base_directory = Path(script_file).resolve().parent if script_file else Path.cwd()
+    create_knime_plots(df, base_directory / "Reproduce KNIME")
