@@ -243,3 +243,11 @@ __pycache__/
 
 .vscode/settings.json
 .vscode/
+
+.csv
+# Large data files - regenerate locally instead of committing
+Concatenate_Chch_Data/
+Data/
+W4 Deliverable 2/listings.csv
+W5 Deliverable 3/Reproduce KNIME/listings_for_W5.csv
+W6 Deliverable 4/data/
