@@ -243,3 +243,5 @@ __pycache__/
 
 .vscode/settings.json
 .vscode/
+
+.csv
