@@ -42,7 +42,7 @@ The filtered bond data comes from the Tenancy Services report and is saved as
 - Removed 94 rows with a missing `Location Id`, because they cannot be matched
   to a location.
 - Kept `Location Id` and `TimeFrame` for the future comparison.
-- Kept `-99` IDs because they are reported values, not missing values.
+- Removed `-99` IDs because they aggregate rows rather than individual observations.
 - Converted `TimeFrame` to a date and the rent and bond columns to numeric.
 - Kept `Number Of Beds` as text because it includes values such as `ALL` and
   `5+`.

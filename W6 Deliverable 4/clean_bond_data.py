@@ -16,6 +16,7 @@ starting_rows = len(data)
 # A row without a Location Id cannot be matched to a location, so remove it.
 missing_location_id = data["Location Id"].isna().sum()
 data = data.dropna(subset=["Location Id"]).copy()
+data = data[data["Location Id"] != "-99"].copy()
 
 
 # Make dates and numeric columns consistent.
