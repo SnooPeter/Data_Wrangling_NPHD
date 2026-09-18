@@ -12,6 +12,9 @@ input_file = (
 )
 output_file = folder / "data" / "bond_data_timeframe.csv"
 
+# Ensure the 'data' subfolder exists before writing
+output_file.parent.mkdir(parents=True, exist_ok=True)
+
 
 # The Christchurch data covers October 2025 to June 2026.
 # The bond report is quarterly, so these are the matching quarters.
@@ -32,3 +35,4 @@ print(f"Rows before filtering: {len(data)}")
 print(f"Rows after filtering: {len(filtered_data)}")
 print(f"Timeframes kept: {timeframes_to_keep}")
 print(f"Saved to: {output_file}")
+
