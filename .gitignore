@@ -237,6 +237,11 @@ desktop.ini
 # Mac files
 .DS_Store
 
+# macOS system files
+__MACOSX/
+.DS_Store
+._*
+
 # Python cache
 __pycache__/
 *.pyc.DS_Store
