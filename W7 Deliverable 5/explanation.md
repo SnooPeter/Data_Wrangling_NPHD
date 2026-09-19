@@ -6,37 +6,38 @@ The input datasets are:
 - `data/airbnb_with_area_codes.csv`: Cleaned Airbnb Christchurch listings enriched with spatial area codes.
 - `data/bond_data_timeframe.csv`: Cleaned Tenancy Services quarterly rental bond dataset.
 
+- **Spatial Boundaries:** Stats NZ Statistical Area 2 2019 Generalised Layer (Layer ID `98970`).
+
 The final integrated dataset is saved to `data/final_airbnb_bond_merged.csv`. The integration code is in `merge_datasets.py`.
 
 ## Decisions
 
-- **Spatial Matching (`area_code` & `Location Id`):** Matched Airbnb listings to Tenancy Services bond data using official Stats NZ Statistical Area 2 (`SA2`) codes. Used a dual-layer spatial fetch strategy (checking 2025 and 2026 boundary layers) to maximize coverage.
+- **Spatial Enrichment (SA2 2019):** Queried the Stats NZ Koordinates API using unique listing coordinate pairs against the **Statistical Area 2 2019** boundary layer (`98970`) to extract official `area_code` values (`SA22019_V1_00`). This ensures historical vintage compatibility with the Tenancy Services bond dataset.
 
-- **Temporal Alignment (`time_key`):** Standardized monthly Airbnb observation dates (`month_year`) into quarterly periods (`time_key`) by rounding months down to the start of their respective quarters to match government quarterly bond reporting (`TimeFrame`).
+- **Temporal Alignment (3-Month Quarters):** Converted monthly Airbnb snapshot dates (`month_year`) into 3-month quarterly start keys (`time_key`) using a rolling floor function. This correctly maps April, May, and June listings into Q2 (`YYYY-04`) to align with government quarterly bond reporting (`TimeFrame`).
 
-- **Bond Data Aggregation Filter:** Filtered the bond dataset strictly to aggregate totals (`Dwelling Type == 'ALL'` and `Number Of Beds == 'ALL'`) to prevent Cartesian duplication and data explosion.
+- **Bond Data Aggregation Filter:** Filtered the bond dataset strictly to aggregate totals (`Dwelling Type == 'ALL'` and `Number Of Beds == 'ALL'`) to prevent Cartesian duplication and row explosion during the merge.
 
-- **Preserving Observational Integrity (Left Join):** Performed a Left Join treating the Airbnb dataset as the primary master table to ensure zero row loss.
+- **Observational Integrity (Left Join):** Performed a Left Join (`how="left"`) using the Airbnb dataset as the master table, ensuring zero row loss of primary listings.
 
-- **Retaining Panel Structure:** Kept repeated listing IDs across monthly snapshots to maintain time-series history from October 2025 to June 2026.
+- **Panel Structure:** Retained repeated listing IDs across monthly snapshots to maintain time-series continuity from October 2025 through June 2026.
 
 ## Consequences
 
-- Rows before merge (Airbnb): 28,795
-- Rows after merge (Final Output): 28,795
-- Rows lost: 0
-- Unique Airbnb listing IDs: 4,117
-(This means that across your entire multi-month observation window (from October 2025 to June 2026), there were 4,117 distinct individual properties being tracked in Christchurch, which expanded out to 28,795 total rows because individual listings appeared across multiple monthly snapshots.)
-- Columns before merge: 18 (Airbnb) + 12 (Bond) = 30
-- Columns after merge: 29 (excluding redundant join keys)
-- Missing median rent rows: 6,849 (~23.8%)
+- **Total Rows (Airbnb Master):** 28,795
+- **Total Rows (Final Merged Output):** 28,795
+- **Rows Lost:** 0
+- **Unique Airbnb Listing IDs:** 4,117
+(This means that across your entire multi-month observation window (from October 2025 to June 2026), there were 
+distinct individual properties being tracked in Christchurch, which expanded out to 28,795 total rows because individual listings appeared across multiple monthly snapshots.)
+- **Missing Median Rent Rows:** 4,244 (~14.7%)
 
 ## Reason for Missing Rent Data
 
-Roughly 23.8% of the rows in the merged dataset have missing (`NaN`) values for median rent. This occurs for two main reasons:
+Roughly 14.7% of the rows in the merged dataset have missing (`NaN`) values for median rent. This occurs for two main reasons:
 
 1. **Government Privacy Suppression:** The Ministry of Business, Innovation and Employment (MBIE) and Tenancy Services legally suppress rental data for small statistical areas (SA2 zones) or low-volume quarterly windows to prevent individual landlords or tenants from being identified.
 
-2. **Temporal Gaps:** Certain Christchurch neighborhoods had active Airbnb listings during specific months, but zero newly lodged rental bonds were recorded or published by the government during those exact quarters. 
+2. **Temporal Gaps:** Certain Christchurch neighborhoods had active Airbnb listings during specific months, but zero newly lodged rental bonds were recorded or published by the government during those exact quarters.
 
 Rather than indicating an error in the script, these missing values reflect the real-world constraints of working with public government administrative data.
