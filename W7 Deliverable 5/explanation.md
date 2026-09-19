@@ -41,3 +41,19 @@ Roughly 14.7% of the rows in the merged dataset have missing (`NaN`) values for 
 2. **Temporal Gaps:** Certain Christchurch neighborhoods had active Airbnb listings during specific months, but zero newly lodged rental bonds were recorded or published by the government during those exact quarters.
 
 Rather than indicating an error in the script, these missing values reflect the real-world constraints of working with public government administrative data.
+
+
+## Peter: "Let's consider below as the reason shouldn't be stated as a fact."
+## Reason for Missing Rent Data
+
+Roughly 14.7% of the rows in the merged dataset have missing (`NaN`) values for median rent.
+This is primarily due to Tenancy Services' privacy suppression policy: results are withheld
+whenever a given location/quarter selection has fewer than 5 recorded bonds. The true count in
+these cases is not disclosed — it could be anywhere from 0 to 4, not necessarily zero.
+
+Of the 26 Christchurch area codes affected, 10 do appear in other quarters across the full
+2020–2026 history (just not in our selected quarters), which strongly supports the suppression
+explanation: 333500, 332900, 333100, 332200, 325500, 326200, 317200, 331500, 320000, 317100. 
+The remaining 16 never appear in the dataset at all across 6 years of data — most
+appear to be low-density areas (e.g. Banks Peninsula), consistent with persistent suppression,
+but this has not been confirmed with full certainty for every case.
