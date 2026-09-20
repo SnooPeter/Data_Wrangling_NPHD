@@ -19,11 +19,10 @@ INPUT_AIRBNB = (
 OUTPUT_DIR = SCRIPT_DIR / "data"
 OUTPUT_AIRBNB = OUTPUT_DIR / "airbnb_with_area_codes.csv"
 
-# --- API CONFIGURATION ---
+# --- API CONFIGURATION FOR SA2 2019 ---
 API_KEY = "daf8275647064c4cb8a6eab06fae5b27" 
-LAYER_2025 = "120978"  # Statistical Area 2 2025 layer
-LAYER_2026 = "123515"  # Statistical Area 2 2026 layer
-AREA_CODE_FIELD = "SA22025_V1_00"  # Note: 2026 layer may use a similar property structure
+LAYER_2019 = "98970"  # Statistical Area 2 2019 layer ID
+AREA_CODE_FIELD = "SA22019_V1_00"  # Property field name for 2019 layer
 
 
 def query_layer(lat, lon, layer_id):
@@ -33,7 +32,7 @@ def query_layer(lat, lon, layer_id):
         "key": API_KEY,
         "layer": layer_id,
         "x": lon,  
-        "y": lat   
+        "y": lat
     }
     try:
         response = requests.get(url, params=params, timeout=10)
@@ -41,10 +40,10 @@ def query_layer(lat, lon, layer_id):
             data = response.json()
             features = data.get("vectorQuery", {}).get("layers", {}).get(str(layer_id), {}).get("features", [])
             if features:
-                # Try standard field names across both layer versions
                 props = features[0]["properties"]
+                # Dynamically look for the 2019 SA2 code field name
                 for key in props.keys():
-                    if "SA2" in key and "00" in key:
+                    if "SA2" in key and "2019" in key:
                         return props.get(key)
                 return props.get(AREA_CODE_FIELD)
     except Exception:
@@ -53,18 +52,13 @@ def query_layer(lat, lon, layer_id):
 
 
 def fetch_area_code(args):
-    """Worker function to query a single unique latitude/longitude pair across 2025 and 2026 layers."""
+    """Worker function to query a single unique latitude/longitude pair."""
     lat, lon = args
     if pd.isna(lat) or pd.isna(lon):
         return (lat, lon), None
         
-    # 1. Try querying the 2025 boundary layer first
-    area_code = query_layer(lat, lon, LAYER_2025)
-    
-    # 2. If not found or empty, fallback to the 2026 boundary layer
-    if not area_code:
-        area_code = query_layer(lat, lon, LAYER_2026)
-        
+    # Query the 2019 boundary layer
+    area_code = query_layer(lat, lon, LAYER_2019)
     return (lat, lon), area_code
 
 
@@ -76,14 +70,11 @@ if __name__ == "__main__":
     airbnb_df = pd.read_csv(INPUT_AIRBNB)
     
     # --- PRE-FLIGHT API TEST ---
-    print("\nTesting API connection and verifying multi-layer setup...")
-    test_code = query_layer(-43.51108, 172.62388, LAYER_2025)
+    print("\nTesting API connection with SA2 2019 layer (98970)...")
+    test_code = query_layer(-43.51108, 172.62388, LAYER_2019)
+    
     if not test_code:
-        print(f"\n[WARNING] Could not resolve test coordinate on 2025 layer. Trying 2026 layer...")
-        test_code = query_layer(-43.51108, 172.62388, LAYER_2026)
-        
-    if not test_code:
-        print(f"\n[ERROR] API test failed across layers. Please check your API key.")
+        print(f"\n[ERROR] API test failed for layer 98970. Please check your API key.")
         sys.exit(1)
         
     print(f"API connection successful! Test area code resolved as: {test_code}\n")
@@ -95,7 +86,7 @@ if __name__ == "__main__":
     
     coord_lookup = {}
     num_cores = cpu_count()
-    print(f"Querying Stats NZ API (2025 & 2026 layers) across {num_cores} worker processes...")
+    print(f"Querying Stats NZ API (SA2 2019 Layer 98970) across {num_cores} worker processes...")
     
     # 2. Query API across unique coordinates
     with Pool(processes=num_cores) as pool:
@@ -103,7 +94,7 @@ if __name__ == "__main__":
             coord_lookup[coord_pair] = area_code
             
     # 3. Map the results back to all rows
-    print("Mapping dual-layer area codes back to full dataset...")
+    print("Mapping 2019 area codes back to full dataset...")
     airbnb_df["area_code"] = [
         coord_lookup.get((lat, lon)) for lat, lon in zip(airbnb_df["latitude"], airbnb_df["longitude"])
     ]
@@ -111,4 +102,4 @@ if __name__ == "__main__":
     # 4. Save the file
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     airbnb_df.to_csv(OUTPUT_AIRBNB, index=False)
-    print(f"Success! Dual-layer updated dataset saved to: {OUTPUT_AIRBNB.resolve()}")
+    print(f"Success! SA2 2019 updated dataset saved to: {OUTPUT_AIRBNB.resolve()}")
