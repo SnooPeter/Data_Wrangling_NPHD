@@ -3,7 +3,7 @@ import pandas as pd
 
 # Define paths dynamically
 SCRIPT_DIR = Path(__file__).resolve().parent
-DATA_DIR = SCRIPT_DIR / "data"  # Adjust if files are in the same folder as script
+DATA_DIR = SCRIPT_DIR / "data"
 file_path = DATA_DIR / "final_airbnb_bond_merged.csv"
 
 # Load merged dataset
@@ -23,25 +23,29 @@ bond_counts = (
     .reset_index(name="long_term_rentals")
 )
 
-# 3. Merge counts together for comparison
+# 3. Merge counts together
 supply_comparison = pd.merge(
     airbnb_counts, bond_counts, on="area_code", how="outer"
-).fillna(0)
+)
 
-# Calculate total supply and ratio of short-term supply safely
+# Calculate total supply
 supply_comparison["total_supply"] = (
-    supply_comparison["airbnb_count"] + supply_comparison["long_term_rentals"]
+    supply_comparison["airbnb_count"]
+    + supply_comparison["long_term_rentals"]
 )
 
-# Use fillna(0) in case total_supply is 0
+# Calculate Airbnb percentage
 supply_comparison["airbnb_ratio"] = (
-    (supply_comparison["airbnb_count"] / supply_comparison["total_supply"])
+    supply_comparison["airbnb_count"]
+    / supply_comparison["total_supply"]
     * 100
-).fillna(0)
-
-# Display top 10 locations by Airbnb volume
-print(
-    supply_comparison.sort_values(
-        by="airbnb_count", ascending=False
-    ).head(10)
 )
+
+# Change zeros to NA
+supply_comparison = supply_comparison.replace(0, pd.NA)
+
+# Print the FULL dataframe
+pd.set_option("display.max_rows", None)
+pd.set_option("display.max_columns", None)
+
+print(supply_comparison)
