@@ -34,9 +34,5 @@ location_gaps = (
 # Change zeros to NA
 location_gaps = location_gaps.replace(0, pd.NA)
 
-# Allow pandas to print ALL rows and columns
-pd.set_option("display.max_rows", None)
-pd.set_option("display.max_columns", None)
-
 print("Top Locations with the Largest Short- vs. Long-Term Price Gap:")
-print(location_gaps)
+print(location_gaps.head(10))

@@ -44,8 +44,6 @@ supply_comparison["airbnb_ratio"] = (
 # Change zeros to NA
 supply_comparison = supply_comparison.replace(0, pd.NA)
 
-# Print the FULL dataframe
-pd.set_option("display.max_rows", None)
-pd.set_option("display.max_columns", None)
-
-print(supply_comparison)
+print(
+    supply_comparison.sort_values(by="airbnb_count", ascending=False).head(10)
+)
