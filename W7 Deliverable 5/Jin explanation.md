@@ -34,7 +34,7 @@ distinct individual properties being tracked in Christchurch, which expanded out
 
 ## Reason for Missing Rent Data
 
-Roughly 14.7% of the rows in the merged dataset have missing (`NaN`) values for median rent.
+Roughly 14.9% of the rows in the merged dataset have missing (`NaN`) values for median rent.
 This is primarily due to Tenancy Services' privacy suppression policy: results are withheld
 whenever a given location/quarter selection has fewer than 5 recorded bonds. The true count in
 these cases is not disclosed — it could be anywhere from 0 to 4, not necessarily zero.
