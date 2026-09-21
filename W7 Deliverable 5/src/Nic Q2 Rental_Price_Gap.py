@@ -36,3 +36,17 @@ location_gaps = location_gaps.replace(0, pd.NA)
 
 print("Top Locations with the Largest Short- vs. Long-Term Price Gap:")
 print(location_gaps.head(10))
+
+# Path to the output directory
+OUTPUT_DIR = SCRIPT_DIR.parent / "output"
+
+# Create the output folder if it doesn't already exist
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+# Define the full output file path
+output_path = OUTPUT_DIR / "location_price_gaps.csv"
+
+# Export the DataFrame to CSV
+location_gaps.to_csv(output_path)
+
+print(f"Data successfully exported to {output_path}")
