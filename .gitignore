@@ -264,7 +264,10 @@ w7_backup_analysis.py
 Area_Code_Lookup.py
 area_name_cache.json
 task2_gap_distribution.png
-.csv
+task2_gap_by_location.csv
+task3_counts_by_location.csv
+unmatched_area_codes_to_check.csv
+
 
 # Environment variables (API key)
 .env
