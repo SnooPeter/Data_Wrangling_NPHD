@@ -30,7 +30,7 @@ The final integrated dataset is saved to `data/final_airbnb_bond_merged.csv`. Th
 - **Unique Airbnb Listing IDs:** 4,117
 (This means that across your entire multi-month observation window (from October 2025 to June 2026), there were 
 distinct individual properties being tracked in Christchurch, which expanded out to 28,795 total rows because individual listings appeared across multiple monthly snapshots.)
-- **Missing Median Rent Rows:** 4,244 (~14.7%)
+- **Missing Median Rent Rows:** 4,277 (~14.9%)
 
 ## Reason for Missing Rent Data
 
