@@ -1,9 +1,20 @@
+import os
 from pathlib import Path
-import pandas as pd
-import requests
 import sys
 from multiprocessing import Pool, cpu_count
+import pandas as pd
+import requests
 from tqdm import tqdm
+from dotenv import load_dotenv
+
+# --- LOAD ENVIRONMENT VARIABLES ---
+# Automatically loads the API key from .env without exposing it in the repo
+load_dotenv()
+API_KEY = os.getenv("STATS_NZ_API_KEY")
+
+if not API_KEY:
+    print("[ERROR] STATS_NZ_API_KEY not found. Please create a .env file containing your key.")
+    sys.exit(1)
 
 # --- DYNAMIC PATHING ---
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -20,13 +31,12 @@ OUTPUT_DIR = SCRIPT_DIR / "data"
 OUTPUT_AIRBNB = OUTPUT_DIR / "airbnb_with_area_codes.csv"
 
 # --- API CONFIGURATION FOR SA2 2019 ---
-API_KEY = "daf8275647064c4cb8a6eab06fae5b27" 
 LAYER_2019 = "98970"  # Statistical Area 2 2019 layer ID
 AREA_CODE_FIELD = "SA22019_V1_00"  # Property field name for 2019 layer
 
 
 def query_layer(lat, lon, layer_id):
-    """Helper function to query a specific layer ID for a coordinate."""
+    """Helper function to query a specific layer ID for a coordinate using the loaded API key."""
     url = "https://datafinder.stats.govt.nz/services/query/v1/vector.json"
     params = {
         "key": API_KEY,
@@ -38,7 +48,12 @@ def query_layer(lat, lon, layer_id):
         response = requests.get(url, params=params, timeout=10)
         if response.status_code == 200:
             data = response.json()
-            features = data.get("vectorQuery", {}).get("layers", {}).get(str(layer_id), {}).get("features", [])
+            features = (
+                data.get("vectorQuery", {})
+                .get("layers", {})
+                .get(str(layer_id), {})
+                .get("features", [])
+            )
             if features:
                 props = features[0]["properties"]
                 # Dynamically look for the 2019 SA2 code field name
@@ -57,7 +72,6 @@ def fetch_area_code(args):
     if pd.isna(lat) or pd.isna(lon):
         return (lat, lon), None
         
-    # Query the 2019 boundary layer
     area_code = query_layer(lat, lon, LAYER_2019)
     return (lat, lon), area_code
 
@@ -74,11 +88,10 @@ if __name__ == "__main__":
     test_code = query_layer(-43.51108, 172.62388, LAYER_2019)
     
     if not test_code:
-        print(f"\n[ERROR] API test failed for layer 98970. Please check your API key.")
+        print(f"\n[ERROR] API test failed for layer 98970. Please check your API key in .env.")
         sys.exit(1)
         
     print(f"API connection successful! Test area code resolved as: {test_code}\n")
-    # ---------------------------
 
     # 1. Extract ONLY unique coordinate pairs
     unique_coords = airbnb_df[["latitude", "longitude"]].drop_duplicates().values.tolist()

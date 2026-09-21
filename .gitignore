@@ -262,3 +262,7 @@ check_326600_and_2023_table.py
 w7_backup_analysis.py
 backup_analysis_output/
 W7 Deliverable 5/area_name_cache.json
+
+
+# Environment variables (API key)
+.env
