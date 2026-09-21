@@ -30,23 +30,11 @@ The final integrated dataset is saved to `data/final_airbnb_bond_merged.csv`. Th
 - **Unique Airbnb Listing IDs:** 4,117
 (This means that across your entire multi-month observation window (from October 2025 to June 2026), there were 
 distinct individual properties being tracked in Christchurch, which expanded out to 28,795 total rows because individual listings appeared across multiple monthly snapshots.)
-- **Missing Median Rent Rows:** 4,244 (~14.7%)
+- **Missing Median Rent Rows:** 4,277 (~14.9%)
 
 ## Reason for Missing Rent Data
 
-Roughly 14.7% of the rows in the merged dataset have missing (`NaN`) values for median rent. This occurs for two main reasons:
-
-1. **Government Privacy Suppression:** The Ministry of Business, Innovation and Employment (MBIE) and Tenancy Services legally suppress rental data for small statistical areas (SA2 zones) or low-volume quarterly windows to prevent individual landlords or tenants from being identified.
-
-2. **Temporal Gaps:** Certain Christchurch neighborhoods had active Airbnb listings during specific months, but zero newly lodged rental bonds were recorded or published by the government during those exact quarters.
-
-Rather than indicating an error in the script, these missing values reflect the real-world constraints of working with public government administrative data.
-
-
-## Peter: "Let's consider below as the reason shouldn't be stated as a fact."
-## Reason for Missing Rent Data
-
-Roughly 14.7% of the rows in the merged dataset have missing (`NaN`) values for median rent.
+Roughly 14.9% of the rows in the merged dataset have missing (`NaN`) values for median rent.
 This is primarily due to Tenancy Services' privacy suppression policy: results are withheld
 whenever a given location/quarter selection has fewer than 5 recorded bonds. The true count in
 these cases is not disclosed — it could be anywhere from 0 to 4, not necessarily zero.
