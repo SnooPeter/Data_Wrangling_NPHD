@@ -250,6 +250,7 @@ __pycache__/
 .vscode/
 
 .csv
+
 # Large data files - regenerate locally instead of committing
 Concatenate_Chch_Data/
 Data/
@@ -261,10 +262,9 @@ W6 Deliverable 4/data/
 check_326600_and_2023_table.py
 w7_backup_analysis.py
 Area_Code_Lookup.py
-
-# W7 Deliverable 5: generated outputs (code lives in src/, data/ is pipeline output too but tracked separately)
-W7 Deliverable 5/output/
-
+area_name_cache.json
+task2_gap_distribution.png
+.csv
 
 # Environment variables (API key)
 .env
