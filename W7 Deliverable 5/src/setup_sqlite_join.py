@@ -4,8 +4,8 @@ import pandas as pd
 
 # --- 1. DYNAMIC PATH CONFIGURATION ---
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parent
-DATA_DIR = SCRIPT_DIR / "data"
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
+DATA_DIR = SCRIPT_DIR.parent / "data"
 
 AIRBNB_CSV = DATA_DIR / "airbnb_with_area_codes.csv"
 DB_FILE = DATA_DIR / "christchurch_housing.db"

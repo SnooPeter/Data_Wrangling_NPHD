@@ -260,8 +260,10 @@ W6 Deliverable 4/data/
 # Temperary Checking files from Peter
 check_326600_and_2023_table.py
 w7_backup_analysis.py
-backup_analysis_output/
-W7 Deliverable 5/area_name_cache.json
+Area_Code_Lookup.py
+
+# W7 Deliverable 5: generated outputs (code lives in src/, data/ is pipeline output too but tracked separately)
+W7 Deliverable 5/output/
 
 
 # Environment variables (API key)

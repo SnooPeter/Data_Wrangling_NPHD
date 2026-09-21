@@ -6,7 +6,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 
 # Path to the data folder (one level up if script is in scripts/, or same level)
 # If script and data folder are both in the project root:
-DATA_DIR = SCRIPT_DIR / "data"
+DATA_DIR = SCRIPT_DIR.parent / "data"
 
 # File path
 file_path = DATA_DIR / "airbnb_with_area_codes.csv"

@@ -3,7 +3,7 @@ import pandas as pd
 
 # Define paths dynamically
 SCRIPT_DIR = Path(__file__).resolve().parent
-DATA_DIR = SCRIPT_DIR / "data"
+DATA_DIR = SCRIPT_DIR.parent / "data"
 file_path = DATA_DIR / "final_airbnb_bond_merged.csv"
 
 # Load merged dataset

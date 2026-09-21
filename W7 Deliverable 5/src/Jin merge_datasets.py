@@ -3,8 +3,8 @@ import pandas as pd
 
 # --- DYNAMIC PATHING ---
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parent
-DATA_DIR = SCRIPT_DIR / "data"
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
+DATA_DIR = SCRIPT_DIR.parent / "data"
 
 AIRBNB_FILE = DATA_DIR / "airbnb_with_area_codes.csv"
 FINAL_OUTPUT = DATA_DIR / "final_airbnb_bond_merged.csv"

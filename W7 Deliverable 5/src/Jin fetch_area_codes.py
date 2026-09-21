@@ -18,7 +18,7 @@ if not API_KEY:
 
 # --- DYNAMIC PATHING ---
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parent
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
 
 INPUT_AIRBNB = (
     PROJECT_ROOT
@@ -27,7 +27,7 @@ INPUT_AIRBNB = (
     / "christchurch_listings_clean.csv"
 )
 
-OUTPUT_DIR = SCRIPT_DIR / "data"
+OUTPUT_DIR = SCRIPT_DIR.parent / "data"
 OUTPUT_AIRBNB = OUTPUT_DIR / "airbnb_with_area_codes.csv"
 
 # --- API CONFIGURATION FOR SA2 2019 ---
