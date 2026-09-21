@@ -4,12 +4,17 @@ import pandas as pd
 
 # --- 1. DYNAMIC PATH CONFIGURATION ---
 SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parent
 DATA_DIR = SCRIPT_DIR / "data"
 
 AIRBNB_CSV = DATA_DIR / "airbnb_with_area_codes.csv"
-BOND_CSV = DATA_DIR / "bond_data_timeframe.csv"
 DB_FILE = DATA_DIR / "christchurch_housing.db"
 OUTPUT_MERGED_CSV = DATA_DIR / "final_airbnb_bond_merged_sql.csv"
+
+# Auto-locate the bond dataset (checks Week 7 first, falls back to Week 6 - same convention as merge_datasets.py)
+BOND_CSV = DATA_DIR / "bond_data_timeframe.csv"
+if not BOND_CSV.exists():
+    BOND_CSV = PROJECT_ROOT / "W6 Deliverable 4" / "data" / "bond_data_timeframe.csv"
 
 
 def get_quarter_start(date_str):

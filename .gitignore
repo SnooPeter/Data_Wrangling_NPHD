@@ -266,3 +266,7 @@ W7 Deliverable 5/area_name_cache.json
 
 # Environment variables (API key)
 .env
+
+# KNIME's own bundled example workflows (not our work, duplicated ~87MB) - ignore going forward
+W4 Deliverable 2/KNIME/Example Workflows/
+W4 Deliverable 2/KNIME/NPHD Pipeline/Example Workflows/
