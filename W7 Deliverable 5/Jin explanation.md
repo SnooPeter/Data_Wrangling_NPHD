@@ -34,18 +34,6 @@ distinct individual properties being tracked in Christchurch, which expanded out
 
 ## Reason for Missing Rent Data
 
-Roughly 14.7% of the rows in the merged dataset have missing (`NaN`) values for median rent. This occurs for two main reasons:
-
-1. **Government Privacy Suppression:** The Ministry of Business, Innovation and Employment (MBIE) and Tenancy Services legally suppress rental data for small statistical areas (SA2 zones) or low-volume quarterly windows to prevent individual landlords or tenants from being identified.
-
-2. **Temporal Gaps:** Certain Christchurch neighborhoods had active Airbnb listings during specific months, but zero newly lodged rental bonds were recorded or published by the government during those exact quarters.
-
-Rather than indicating an error in the script, these missing values reflect the real-world constraints of working with public government administrative data.
-
-
-## Peter: "Let's consider below as the reason shouldn't be stated as a fact."
-## Reason for Missing Rent Data
-
 Roughly 14.7% of the rows in the merged dataset have missing (`NaN`) values for median rent.
 This is primarily due to Tenancy Services' privacy suppression policy: results are withheld
 whenever a given location/quarter selection has fewer than 5 recorded bonds. The true count in
