@@ -49,10 +49,6 @@ supply_comparison["airbnb_ratio"] = (
 # Change zeros to NA
 supply_comparison = supply_comparison.replace(0, pd.NA)
 
-print(
-    supply_comparison.sort_values(by="airbnb_count", ascending=False).head(10)
-)
-
 # Sort results
 supply_comparison = supply_comparison.sort_values(
     by="airbnb_count", ascending=False
