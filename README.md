@@ -2,6 +2,54 @@
 
 DATA201–DATA422 collaborative project. This project uses New Zealand **Airbnb** data to explore the Christchurch rental market.
 
+# Project Structure
+
+```
+data/                 git-ignored — each team member keeps a local copy
+  raw/                downloaded files; code never edits them
+  interim/            in-between files; one step writes them, a later step reads them
+  processed/          final analysis-ready tables
+output/               tables and charts for people, one folder per deliverable
+src/                  code, one folder per deliverable
+  config.py           every file path and constant, defined once
+  run_pipeline.py     runs every step in order
+  W5_Deliverable_3/   combine monthly snapshots, summary statistics, plots
+  W6_Deliverable_4/   clean the Airbnb and bond data
+  W7_Deliverable_5/   area codes, merge, sanity checks, analysis (Q1–Q3)
+others/               Deliverables 1 and 2 (including the KNIME workflow)
+requirements.txt      Python packages needed
+.env.example          template for the Stats NZ API key
+```
+
+# How to Run
+
+**1. Install the packages** (Python 3.10 or newer):
+
+```bash
+pip install -r requirements.txt
+```
+
+**2. Put the raw data in `data/raw/`**, using exactly these file names:
+
+| File | Where it comes from |
+|---|---|
+| `listings_2025-10.csv` … `listings_2026-06.csv` (9 files, one per month) | [Inside Airbnb](https://insideairbnb.com/get-the-data/) → New Zealand → the summary `listings.csv` for each month from Oct 2025 to Jun 2026. Rename each download to `listings_YYYY-MM.csv`. |
+| `Detailed-Quarterly-Tenancy-Q1-2020-Q3-2026.csv` | [Tenancy Services rental bond data](https://www.tenancy.govt.nz/about-tenancy-services/data-and-statistics/rental-bond-data/) → detailed quarterly report |
+
+**3. Add the Stats NZ API key** (only needed the first time, to look up area codes): copy `.env.example` to `.env` in the
+project root and paste your [Stats NZ Datafinder](https://datafinder.stats.govt.nz/) key.
+
+**4. Run the whole pipeline** (from any folder):
+
+```bash
+python src/run_pipeline.py
+```
+
+This rebuilds everything in `data/interim/`, `data/processed/` and `output/` from the raw files, and stops with a clear
+message if a file is missing or a sanity check fails. The Stats NZ lookup is slow, so once
+`data/interim/airbnb_with_area_codes.csv` exists it is reused; add `--refresh-area-codes` to query the API again.
+Each script in `src/` can also be run on its own.
+
 # AirBNB Data
 
 ## Dataset Source

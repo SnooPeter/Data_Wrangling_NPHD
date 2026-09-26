@@ -249,27 +249,26 @@ __pycache__/
 .vscode/settings.json
 .vscode/
 
-.csv
-
-# Large data files - regenerate locally instead of committing
-Concatenate_Chch_Data/
+# Data files are large and stay local: raw files are downloaded (see README),
+# everything else is rebuilt with `python src/run_pipeline.py`
+data/
 Data/
-W4 Deliverable 2/listings.csv
-W5 Deliverable 3/Reproduce KNIME/listings_for_W5.csv
-W6 Deliverable 4/data/
 
-# Temperary Checking files from Peter
+# Generated output tables are regenerable and stay untracked (charts in output/ can still be committed)
+output/**/*.csv
+
+# Temporary checking files from Peter
 check_326600_and_2023_table.py
 w7_backup_analysis.py
 Area_Code_Lookup.py
 
-# W7 Deliverable 5: generated outputs (code lives in src/, everything under output/ is regenerable and stays untracked)
-W7 Deliverable 5/output/
+# R session history
+.Rhistory
 
-
-# Environment variables (API key)
+# Environment variables (API key) - .env.example is committed instead
 .env
 
-# KNIME's own bundled example workflows (not our work, duplicated ~87MB) - ignore going forward
-W4 Deliverable 2/KNIME/Example Workflows/
-W4 Deliverable 2/KNIME/NPHD Pipeline/Example Workflows/
+# Deliverable 2: raw data and KNIME's own bundled example workflows (not our work, ~87MB)
+others/W4 Deliverable 2/listings.csv
+others/W4 Deliverable 2/KNIME/Example Workflows/
+others/W4 Deliverable 2/KNIME/NPHD Pipeline/Example Workflows/
