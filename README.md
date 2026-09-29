@@ -9,7 +9,7 @@ data/                 git-ignored — each team member keeps a local copy
   raw/                downloaded files; code never edits them
   interim/            in-between files; one step writes them, a later step reads them
   processed/          final analysis-ready tables
-output/               tables and charts for people, one folder per deliverable
+output/               tables and charts for people, one folder per deliverable (committed, so results are visible on GitHub)
 src/                  code, one folder per deliverable
   config.py           every file path and constant, defined once
   run_pipeline.py     runs every step in order

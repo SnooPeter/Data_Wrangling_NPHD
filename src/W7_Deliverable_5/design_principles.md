@@ -92,8 +92,9 @@ Best practices from the Week 9 lectures that the project follows:
   the terminal's folder or a `C:\Users\...` path. Month labels do not depend on the computer's language settings. Sorts
   are stable, so ties come out in the same order on every pandas version. `requirements.txt` lists the packages. We
   tested the pipeline on pandas 2.3 and 3.0 and got identical results.
-- **Version control with Git/GitHub, but no data or secrets in the repo.** Data files, generated tables and `.env` are
-  git-ignored. The API key is read with `python-dotenv` and never appears in code; `.env.example` shows teammates what
+- **Version control with Git/GitHub, but no data or secrets in the repo.** Data files and `.env` are
+  git-ignored. Everything in `output/` (charts and result tables) is committed, so the results can be seen on GitHub
+  without running anything. The API key is read with `python-dotenv` and never appears in code; `.env.example` shows teammates what
   to create.
 - **Fail loudly, not silently.** A missing input stops the script with a message that says what to download or which
   step to run. API errors are reported instead of being swallowed. `validate="many_to_one"` makes the merge raise an

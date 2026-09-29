@@ -21,6 +21,7 @@ src/             code, one folder per deliverable, plus config.py and run_pipeli
 |---|---|
 | Moved all code from the `W5`/`W6`/`W7 Deliverable` folders and `Concatenate_Chch_Data/` into `src/<deliverable>/`. | Code, data and results were mixed together. Keeping them apart makes clear what is source code and what can be regenerated. |
 | Split data into `raw` / `interim` / `processed`. | Raw downloads can never be overwritten by accident, and everything else can be deleted and rebuilt. |
+| `output/` is committed (charts and result tables), while `data/` stays git-ignored. | The outputs are small and are our results: the tutor and team can see them on GitHub without downloading the raw data and running the pipeline. |
 | All charts and tables go to `output/<deliverable>/`. The W5 charts used to land next to the code or in whatever folder the terminal was in. | One place for results. Data flows one way: raw → interim → processed → output. |
 | Renamed the raw snapshots from `listings (1).csv` … `listings (8).csv` to `listings_2025-10.csv` … `listings_2026-06.csv`. | The old names depended on the order the browser downloaded them, so each computer could map files to the wrong month. The month is now in the file name. |
 | Moved Deliverables 1 and 2 into `others/`. | They are not part of the Python pipeline. They were moved with `git mv` so the KNIME files stay tracked. |
