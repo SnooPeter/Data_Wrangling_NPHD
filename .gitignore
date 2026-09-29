@@ -254,8 +254,8 @@ __pycache__/
 data/
 Data/
 
-# Generated output tables are regenerable and stay untracked (charts in output/ can still be committed)
-output/**/*.csv
+# Generated tables and charts can be rebuilt by the pipeline.
+output/
 
 # Temporary checking files from Peter
 check_326600_and_2023_table.py
