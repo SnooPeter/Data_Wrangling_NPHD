@@ -15,7 +15,8 @@ src/                  code, one folder per deliverable
   run_pipeline.py     runs every step in order
   W5_Deliverable_3/   combine monthly snapshots, summary statistics, plots
   W6_Deliverable_4/   clean the Airbnb and bond data
-  W7_Deliverable_5/   area codes, merge, sanity checks, analysis (Q1–Q3)
+  W7_Deliverable_5/   area codes and names, merge, analysis (Q1–Q3)
+  W10_Deliverable_6/  best-practices review: sanity checks, design principles, change notes
 others/               Deliverables 1 and 2 (including the KNIME workflow)
 requirements.txt      Python packages needed
 .env.example          template for the Stats NZ API key

@@ -2,7 +2,7 @@
 
 Airbnb supply = unique listings seen in any snapshot (Oct 2025 - Jun 2026).
 Long-term supply = highest Active Bonds value for the area in the three quarters.
-Note: the two counts cover different time windows (see design_principles.md).
+Note: the two counts cover different time windows (see W10_Deliverable_6/design_principles.md).
 Original author: Nic (table and chart were previously two separate scripts).
 """
 import sys

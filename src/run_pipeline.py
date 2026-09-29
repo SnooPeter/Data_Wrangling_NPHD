@@ -30,11 +30,11 @@ STEPS = [
     "W6_Deliverable_4/clean_christchurch.py",
     "W6_Deliverable_4/filter_timeframe.py",
     "W6_Deliverable_4/clean_bond_data.py",
-    # Deliverable 5: area codes and names, merge, checks, analysis
+    # Deliverable 5: area codes and names, merge, analysis (checked by Deliverable 6)
     *API_STEPS,
     "W7_Deliverable_5/merge_datasets.py",
     "W7_Deliverable_5/merge_datasets_sql.py",
-    "W7_Deliverable_5/sanity_checks.py",
+    "W10_Deliverable_6/sanity_checks.py",  # stops the pipeline if the merge looks wrong
     "W7_Deliverable_5/q1_median_airbnb_price.py",
     "W7_Deliverable_5/q2_price_gap.py",
     "W7_Deliverable_5/q3_supply_comparison.py",

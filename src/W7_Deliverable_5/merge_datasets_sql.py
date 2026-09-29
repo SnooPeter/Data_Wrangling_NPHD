@@ -2,7 +2,7 @@
 
 Original author: Jin.
 
-Running the join in two different tools lets sanity_checks.py confirm that
+Running the join in two different tools lets W10_Deliverable_6/sanity_checks.py confirm that
 both give the same result.
 """
 import sqlite3

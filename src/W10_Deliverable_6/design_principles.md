@@ -56,7 +56,7 @@ data/raw/Detailed-Quarterly…csv ─► [D4] filter_timeframe ─► clean_bond
                                                                                         ▼
                                                         processed/final_airbnb_bond_merged.csv
                                                                                         │
-                                             [D5] sanity_checks ─► Q1, Q2, Q3 ─► output/W7_…
+                                             [D6] sanity_checks ─► [D5] Q1, Q2, Q3 ─► output/W7_…
 ```
 
 1. **Combine (Deliverable 3)** — each monthly NZ snapshot is filtered to Christchurch City and labelled with its

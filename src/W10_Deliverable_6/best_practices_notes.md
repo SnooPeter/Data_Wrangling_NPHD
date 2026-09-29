@@ -1,4 +1,4 @@
-# Week 9 — Best Practices Review Notes
+# Deliverable 6 — Best Practices Review Notes
 
 Scope: the whole Python pipeline (Deliverables 3, 4 and 5). Deliverables 1 and 2 (including the KNIME workflow) were
 moved unchanged into `others/`.
@@ -50,7 +50,7 @@ src/             code, one folder per deliverable, plus config.py and run_pipeli
 |---|---|
 | `README.md`: new *Project Structure* and *How to Run* sections (install, which raw files to download and what to name them, API key, one command to run). | Someone new can reproduce the results without asking us. |
 | `explanation.md`: missing-rent figure 4,277 (14.9%) → **4,244 (14.7%)**. `cleaning_decisions.md`: bond rows 27,118 → **26,991**, and it now mentions the 127 `-99` rows. | The write-ups did not match what the code actually produces. |
-| `design_principles.md` (AI-assisted, Claude Opus 5.5). | Week 9 task. |
+| New `src/W10_Deliverable_6/` folder holding this deliverable: these notes, `design_principles.md` (AI-assisted, Claude Opus 5.5) and `sanity_checks.py`. | Deliverable 6 task, kept separate from the Deliverable 5 analysis code. |
 
 **How we checked nothing broke:** we deleted every generated file except the cached API result, ran
 `python src/run_pipeline.py` from an unrelated folder, and compared every rebuilt dataset and result table with the
@@ -70,7 +70,7 @@ table, which is now deterministic. We ran the same test on **pandas 2.3.3 and pa
 **Why this step?** The join is where rows can be silently duplicated (many-to-one keys) or silently lost (wrong keys),
 and every later answer depends on it.
 
-`src/W7_Deliverable_5/sanity_checks.py` runs automatically after the merge and stops the pipeline if any check fails:
+`src/W10_Deliverable_6/sanity_checks.py` runs automatically after the merge and stops the pipeline if any check fails:
 
 | # | Check | Expectation | Result on our data |
 |---|---|---|---|

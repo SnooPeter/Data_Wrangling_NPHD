@@ -1,4 +1,4 @@
-"""Deliverable 5: sanity checks on the merge step.
+"""Deliverable 6: sanity checks on the Deliverable 5 merge step.
 
 Each check prints PASS or FAIL. The script exits with an error if any check
 fails, so run_pipeline.py stops before the analysis uses bad data.
