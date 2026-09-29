@@ -26,6 +26,7 @@ All inputs are downloaded by hand into `data/raw/`. The code only reads from thi
 | `interim/bond_data_timeframe.csv` | `W6/filter_timeframe.py` | Bond rows for the 3 matching quarters (2025-10, 2026-01, 2026-04) |
 | `interim/bond_data_clean.csv` | `W6/clean_bond_data.py` | Missing and `-99` location IDs removed, types fixed |
 | `interim/airbnb_with_area_codes.csv` | `W7/fetch_area_codes.py` | Listings + SA2-2019 `area_code` (needs the API; reused once made) |
+| `interim/sa2_area_names.csv` | `W7/fetch_area_names.py` | `area_code` → `area_name` for the 171 areas (e.g. 327000 = Christchurch Central-East), used to label the Q2/Q3 tables and charts |
 | `processed/final_airbnb_bond_merged.csv` | `W7/merge_datasets.py` | One row per listing per month, with its area's bond figures for that quarter (28,795 × 29) |
 | `processed/final_airbnb_bond_merged_sql.csv` | `W7/merge_datasets_sql.py` | The same join done in SQLite, used as a cross-check |
 
@@ -47,6 +48,7 @@ data/raw/listings_*.csv ─► [D3] concatenate_chch ─► interim/concatenate_
                                              [D4] clean_christchurch ─► interim/christchurch_listings_clean.csv
                                                                                         │
                                              [D5] fetch_area_codes (Stats NZ API) ─► interim/airbnb_with_area_codes.csv
+                                             [D5] fetch_area_names (Stats NZ API) ─► interim/sa2_area_names.csv
                                                                                         │
 data/raw/Detailed-Quarterly…csv ─► [D4] filter_timeframe ─► clean_bond_data ─► interim/bond_data_clean.csv
                                                                                         │
@@ -64,7 +66,8 @@ data/raw/Detailed-Quarterly…csv ─► [D4] filter_timeframe ─► clean_bond
    because each month's snapshot matters. Missing values are kept, not invented. The bond data is cut to the three
    quarters that overlap the listings, and rows without a usable location are removed.
 3. **Spatial enrichment** — each *unique* latitude/longitude pair is sent to the Stats NZ API to get its SA2-2019 code.
-   SA2-**2019** is used because the bond data uses 2019 boundaries.
+   SA2-**2019** is used because the bond data uses 2019 boundaries. A second lookup (one point per area) gets each area's
+   name, so results read "Christchurch Central-East (327000)" instead of a bare code. Both lookups show a `tqdm` progress bar.
 4. **Temporal alignment** — monthly labels (`"May 2026"`) are mapped to the first month of their quarter (`"2026-04"`),
    which is how Tenancy Services labels `TimeFrame`.
 5. **Merge** — a left join on (area code, quarter), using only the bond rows where `Dwelling Type == ALL` and
@@ -99,8 +102,8 @@ Best practices from the Week 9 lectures that the project follows:
   along with row counts, duplicates, quarter alignment and rent ranges.
 - **Readable, modular code.** Each script has a docstring, small functions and a `main()` behind
   `if __name__ == "__main__":`, with `snake_case` file names. The original authors are credited in the docstrings.
-- **Efficiency.** The API is queried once per unique coordinate pair (not once per row) using a small thread pool, and
-  its result is cached so it isn't fetched again on every run.
+- **Efficiency.** The API is queried once per unique coordinate pair (not once per row), and names once per area,
+  using a small thread pool. Both results are cached so they aren't fetched again on every run.
 - **Documented decisions.** `cleaning_decisions.md` (Deliverable 4) and `explanation.md` (Deliverable 5) record what was
   done, why, and the effect on row counts.
 

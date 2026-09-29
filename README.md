@@ -46,8 +46,9 @@ python src/run_pipeline.py
 ```
 
 This rebuilds everything in `data/interim/`, `data/processed/` and `output/` from the raw files, and stops with a clear
-message if a file is missing or a sanity check fails. The Stats NZ lookup is slow, so once
-`data/interim/airbnb_with_area_codes.csv` exists it is reused; add `--refresh-area-codes` to query the API again.
+message if a file is missing or a sanity check fails. The two Stats NZ lookups (area codes, then area names
+such as 327000 = Christchurch Central-East) are slow and show a progress bar. Once `data/interim/airbnb_with_area_codes.csv`
+and `data/interim/sa2_area_names.csv` exist they are reused; add `--refresh-area-codes` to query the API again.
 Each script in `src/` can also be run on its own.
 
 # AirBNB Data

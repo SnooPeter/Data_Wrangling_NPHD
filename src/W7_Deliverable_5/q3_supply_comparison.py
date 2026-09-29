@@ -35,7 +35,7 @@ def supply_by_area(df):
 def plot_top_supply(supply):
     # Areas without bond data have no total, so they cannot be ranked here.
     top = supply.dropna(subset=["total_supply"]).nlargest(config.TOP_N, "total_supply")
-    area_labels = top["area_code"].astype(str)
+    area_labels = [config.area_label(code, name) for code, name in zip(top["area_code"], top["area_name"])]
 
     fig, ax = plt.subplots(figsize=(12, 6))
     ax.bar(area_labels, top["long_term_rentals"], label="Long-Term Rentals", color="#2b5c8f")
@@ -51,10 +51,11 @@ def plot_top_supply(supply):
         fontsize=14,
         pad=15,
     )
-    ax.set_xlabel("Area Code", fontsize=12)
+    ax.set_xlabel("Area (SA2 code)", fontsize=12)
     ax.set_ylabel("Number of Units", fontsize=12)
     ax.legend(title="Rental Type")
     ax.tick_params(axis="x", rotation=45)
+    plt.setp(ax.get_xticklabels(), ha="right")
     fig.savefig(CHART_OUTPUT, dpi=300, bbox_inches="tight")
     plt.close(fig)
 
@@ -62,6 +63,7 @@ def plot_top_supply(supply):
 def main():
     df = pd.read_csv(config.require(config.MERGED), dtype={"area_code": "string"})
     supply = supply_by_area(df)
+    supply.insert(1, "area_name", supply["area_code"].map(config.area_names()))
 
     config.D5_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     supply.to_csv(CSV_OUTPUT, index=False)

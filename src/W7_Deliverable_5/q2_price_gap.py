@@ -30,15 +30,17 @@ def price_gaps_by_area(df):
 
 def plot_top_gaps(location_gaps):
     top = location_gaps.head(config.TOP_N).iloc[::-1]  # largest bar at the top
+    labels = [config.area_label(code, name) for code, name in zip(top.index, top["area_name"])]
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    bars = ax.barh(top.index.astype(str), top["median"], color="#2b5c8f")
+    bars = ax.barh(labels, top["median"], color="#2b5c8f")
     ax.bar_label(bars, labels=[f"${v:.2f}" for v in top["median"]], padding=5, fontsize=10)
     ax.set_title(
-        f"Top {config.TOP_N} Area Codes by Short- vs. Long-Term Price Gap", fontsize=14, pad=15
+        f"Top {config.TOP_N} Areas by Short- vs. Long-Term Price Gap", fontsize=14, pad=15
     )
     ax.set_xlabel("Median Daily Price Gap ($)", fontsize=12)
-    ax.set_ylabel("Area Code", fontsize=12)
+    ax.set_ylabel("Area (SA2 code)", fontsize=12)
+    ax.set_xlim(0, top["median"].max() * 1.15)  # room for the value labels
     ax.grid(axis="x", alpha=0.3)
     fig.savefig(CHART_OUTPUT, dpi=300, bbox_inches="tight")
     plt.close(fig)
@@ -47,6 +49,7 @@ def plot_top_gaps(location_gaps):
 def main():
     df = pd.read_csv(config.require(config.MERGED), dtype={"area_code": "string"})
     location_gaps = price_gaps_by_area(df)
+    location_gaps.insert(0, "area_name", location_gaps.index.map(config.area_names()))
 
     config.D5_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     location_gaps.to_csv(CSV_OUTPUT)

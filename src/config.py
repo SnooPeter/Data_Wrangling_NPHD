@@ -38,6 +38,7 @@ CHCH_CLEAN = INTERIM_DIR / "christchurch_listings_clean.csv"  # W6 clean_christc
 BOND_TIMEFRAME = INTERIM_DIR / "bond_data_timeframe.csv"  # W6 filter_timeframe.py
 BOND_CLEAN = INTERIM_DIR / "bond_data_clean.csv"  # W6 clean_bond_data.py
 AIRBNB_WITH_AREA_CODES = INTERIM_DIR / "airbnb_with_area_codes.csv"  # W7 fetch_area_codes.py
+SA2_AREA_NAMES = INTERIM_DIR / "sa2_area_names.csv"  # W7 fetch_area_names.py
 SQLITE_DB = INTERIM_DIR / "christchurch_housing.db"  # W7 merge_datasets_sql.py
 
 # --- Processed files ---
@@ -61,6 +62,7 @@ TOP_N = 10
 # Stats NZ Datafinder: Statistical Area 2 2019 layer (matches the bond data's SA2-2019 IDs).
 SA2_2019_LAYER_ID = "98970"
 SA2_2019_CODE_FIELD = "SA22019_V1_00"
+SA2_2019_NAME_FIELD = "SA22019_V1_00_NAME"
 
 # English month names written out, so labels do not depend on the computer's language settings.
 MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -97,3 +99,14 @@ def quarter_key(month_year):
 def clean_area_code(codes):
     """Normalise SA2 codes to plain text ('326600'), dropping any trailing '.0'."""
     return codes.astype("string").str.replace(r"\.0$", "", regex=True).str.strip()
+
+
+def area_names():
+    """SA2 code -> area name (e.g. '322200' -> 'Rutland'), from the Stats NZ lookup."""
+    names = pd.read_csv(require(SA2_AREA_NAMES), dtype="string")
+    return dict(zip(names["area_code"], names["area_name"]))
+
+
+def area_label(code, name):
+    """Chart label such as 'Rutland (322200)'; just the code if the name is unknown."""
+    return f"{name} ({code})" if pd.notna(name) else str(code)

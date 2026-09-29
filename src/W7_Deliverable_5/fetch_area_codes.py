@@ -14,6 +14,7 @@ from pathlib import Path
 import pandas as pd
 import requests
 from dotenv import load_dotenv
+from tqdm import tqdm
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))  # lets this file find src/config.py
 import config
@@ -27,14 +28,33 @@ MAX_WORKERS = 8
 REQUEST_TIMEOUT_SECONDS = 10
 
 
-def query_layer(lat, lon, api_key, layer_id=config.SA2_2019_LAYER_ID):
-    """Return the SA2-2019 code containing (lat, lon), or None if it cannot be found."""
+def load_api_key():
+    """Read STATS_NZ_API_KEY from the root .env file and check that it works."""
+    load_dotenv(config.ENV_FILE)
+    api_key = os.getenv("STATS_NZ_API_KEY")
+    if not api_key:
+        sys.exit(
+            f"[ERROR] STATS_NZ_API_KEY not found. Copy .env.example to {config.ENV_FILE} "
+            "and add your Stats NZ Datafinder key."
+        )
+
+    print("Testing API connection with SA2 2019 layer...")
+    test_area = query_sa2(*TEST_POINT, api_key)
+    if not test_area:
+        sys.exit("[ERROR] API test failed. Check your API key in .env and your internet connection.")
+    print(f"API connection successful. Test area: {test_area[config.SA2_2019_NAME_FIELD]}")
+    return api_key
+
+
+def query_sa2(lat, lon, api_key, layer_id=config.SA2_2019_LAYER_ID):
+    """Return the SA2-2019 area containing (lat, lon) as a dict of its properties
+    (code, name, size), or None if it cannot be found."""
     params = {"key": api_key, "layer": layer_id, "x": lon, "y": lat}
     try:
         response = requests.get(API_URL, params=params, timeout=REQUEST_TIMEOUT_SECONDS)
         response.raise_for_status()
     except requests.RequestException as error:
-        print(f"[WARN] API request failed for ({lat}, {lon}): {error}")
+        tqdm.write(f"[WARN] API request failed for ({lat}, {lon}): {error}")
         return None
 
     features = (
@@ -44,27 +64,19 @@ def query_layer(lat, lon, api_key, layer_id=config.SA2_2019_LAYER_ID):
         .get(str(layer_id), {})
         .get("features", [])
     )
-    if not features:
-        return None
-    return features[0]["properties"].get(config.SA2_2019_CODE_FIELD)
+    return features[0]["properties"] if features else None
+
+
+def query_many(coords, api_key, description):
+    """Query a list of (lat, lon) pairs in parallel, with a progress bar."""
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        results = pool.map(lambda c: query_sa2(c[0], c[1], api_key), coords)
+        return list(tqdm(results, total=len(coords), desc=description, unit="request"))
 
 
 def main():
-    load_dotenv(config.ENV_FILE)
-    api_key = os.getenv("STATS_NZ_API_KEY")
-    if not api_key:
-        sys.exit(
-            f"[ERROR] STATS_NZ_API_KEY not found. Copy .env.example to {config.ENV_FILE} "
-            "and add your Stats NZ Datafinder key."
-        )
-
+    api_key = load_api_key()
     airbnb_df = pd.read_csv(config.require(config.CHCH_CLEAN))
-
-    print("Testing API connection with SA2 2019 layer...")
-    test_code = query_layer(*TEST_POINT, api_key)
-    if not test_code:
-        sys.exit("[ERROR] API test failed. Check your API key in .env and your internet connection.")
-    print(f"API connection successful. Test area code: {test_code}")
 
     # Many rows share a location, so query each unique coordinate pair only once.
     coords = list(
@@ -75,9 +87,11 @@ def main():
     )
     print(f"Total rows: {len(airbnb_df):,} | Unique locations to query: {len(coords):,}")
 
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
-        codes = list(pool.map(lambda c: query_layer(c[0], c[1], api_key), coords))
-    coord_lookup = dict(zip(coords, codes))
+    areas = query_many(coords, api_key, "Looking up area codes")
+    coord_lookup = {
+        coord: area.get(config.SA2_2019_CODE_FIELD) if area else None
+        for coord, area in zip(coords, areas)
+    }
 
     airbnb_df["area_code"] = [
         coord_lookup.get((lat, lon))

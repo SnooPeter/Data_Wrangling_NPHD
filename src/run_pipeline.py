@@ -15,7 +15,11 @@ from pathlib import Path
 import config
 
 SRC_DIR = Path(__file__).resolve().parent
-API_STEP = "W7_Deliverable_5/fetch_area_codes.py"
+# Steps that call the Stats NZ API: slow and need a key, so their saved output is reused.
+API_STEPS = {
+    "W7_Deliverable_5/fetch_area_codes.py": config.AIRBNB_WITH_AREA_CODES,
+    "W7_Deliverable_5/fetch_area_names.py": config.SA2_AREA_NAMES,
+}
 
 STEPS = [
     # Deliverable 3: combine the monthly snapshots, summary statistics, plots
@@ -26,8 +30,8 @@ STEPS = [
     "W6_Deliverable_4/clean_christchurch.py",
     "W6_Deliverable_4/filter_timeframe.py",
     "W6_Deliverable_4/clean_bond_data.py",
-    # Deliverable 5: area codes, merge, checks, analysis
-    API_STEP,
+    # Deliverable 5: area codes and names, merge, checks, analysis
+    *API_STEPS,
     "W7_Deliverable_5/merge_datasets.py",
     "W7_Deliverable_5/merge_datasets_sql.py",
     "W7_Deliverable_5/sanity_checks.py",
@@ -42,14 +46,14 @@ def main():
     parser.add_argument(
         "--refresh-area-codes",
         action="store_true",
-        help="query the Stats NZ API again even if area codes are already saved",
+        help="query the Stats NZ API again even if area codes and names are already saved",
     )
     args = parser.parse_args()
 
     for step in STEPS:
-        # The API step is slow and needs a key, so reuse its saved output when possible.
-        if step == API_STEP and config.AIRBNB_WITH_AREA_CODES.exists() and not args.refresh_area_codes:
-            print(f"\n=== Skipping {step} (using saved {config.AIRBNB_WITH_AREA_CODES.name}) ===", flush=True)
+        saved_output = API_STEPS.get(step)
+        if saved_output and saved_output.exists() and not args.refresh_area_codes:
+            print(f"\n=== Skipping {step} (using saved {saved_output.name}) ===", flush=True)
             continue
 
         print(f"\n=== Running {step} ===", flush=True)
