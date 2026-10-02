@@ -1,4 +1,4 @@
-"""Deliverable 3: reproduce the Deliverable 2 KNIME analysis in Python (June 2026 NZ snapshot).
+"""Deliverable 3: reproduce the Deliverable 2 KNIME analysis in Python (latest NZ snapshot).
 
 1. Price histogram - All NZ vs Christchurch City, combined in one chart
 2. Days-since-last-review histogram
@@ -13,8 +13,6 @@ import pandas as pd
 sys.path.append(str(Path(__file__).resolve().parents[1]))  # lets this file find src/config.py
 import config
 
-INPUT_PATH = config.RAW_DIR / "listings_2026-06.csv"
-REFERENCE_DATE = pd.Timestamp("2026-06-16")  # date of the June 2026 snapshot
 KEEP_COLS = ["name", "neighbourhood_group", "price", "number_of_reviews", "last_review"]
 MAX_PRICE = 2000  # same cut-off as the KNIME workflow
 
@@ -23,7 +21,7 @@ def load_data(path):
     return pd.read_csv(config.require(path))[KEEP_COLS]
 
 
-def price_histogram(df):
+def price_histogram(df, snapshot):
     priced = df.dropna(subset=["price"])
     priced = priced[priced["price"] <= MAX_PRICE]
     christchurch = priced[priced["neighbourhood_group"] == config.CITY]
@@ -34,17 +32,17 @@ def price_histogram(df):
     ax.hist(christchurch["price"], bins=bins, alpha=0.6, label=config.CITY, color="#DD8452")
     ax.set_xlabel("Price ($NZD)")
     ax.set_ylabel("Number of listings")
-    ax.set_title("Price Distribution — All NZ vs Christchurch City")
+    ax.set_title(f"Price Distribution — All NZ vs Christchurch City ({snapshot})")
     ax.legend()
     fig.tight_layout()
     fig.savefig(config.D3_OUTPUT_DIR / "price_histogram.png", dpi=150)
     plt.close(fig)
 
 
-def days_since_last_review_histogram(df):
+def days_since_last_review_histogram(df, snapshot):
     reviewed = df.dropna(subset=["last_review"]).copy()
     reviewed["last_review"] = pd.to_datetime(reviewed["last_review"])
-    reviewed["days_since_last_review"] = (REFERENCE_DATE - reviewed["last_review"]).dt.days
+    reviewed["days_since_last_review"] = (config.reference_date(reviewed["last_review"]) - reviewed["last_review"]).dt.days
 
     fig, ax = plt.subplots(figsize=(9, 5))
     custom_bins = [0, 30, 60, 90, 180, 365, 999]
@@ -52,7 +50,7 @@ def days_since_last_review_histogram(df):
     ax.set_xticks(custom_bins)
     ax.set_xlabel("Days since last review")
     ax.set_ylabel("Number of listings")
-    ax.set_title("Distribution of Days Since Last Review")
+    ax.set_title(f"Distribution of Days Since Last Review ({snapshot})")
     fig.tight_layout()
     fig.savefig(config.D3_OUTPUT_DIR / "days_since_last_review_histogram.png", dpi=150)
     plt.close(fig)
@@ -69,9 +67,13 @@ def top_10_percent_reviews(df):
 
 def main():
     config.D3_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    data = load_data(INPUT_PATH)
-    price_histogram(data)
-    days_since_last_review_histogram(data)
+    input_path = config.latest_snapshot()
+    snapshot = config.month_label(input_path.stem.removeprefix("listings_"))
+    print(f"Using the latest snapshot: {input_path.name} ({snapshot})")
+    data = load_data(input_path)
+    print(f"Reference date for days since last review: {config.reference_date(data['last_review']).date()}")
+    price_histogram(data, snapshot)
+    days_since_last_review_histogram(data, snapshot)
     top_10_percent_reviews(data)
     print(f"Plots saved to: {config.D3_OUTPUT_DIR}")
 

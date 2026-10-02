@@ -10,9 +10,11 @@ data/                 git-ignored — each team member keeps a local copy
   interim/            in-between files; one step writes them, a later step reads them
   processed/          final analysis-ready tables
 output/               tables and charts for people, one folder per deliverable (committed, so results are visible on GitHub)
+Makefile              runs only the steps whose inputs changed (`make`)
+run_pipeline.py       runs every step in order, for computers without make
+report.qmd            short Quarto report that reads the results in output/
 src/                  code, one folder per deliverable
   config.py           every file path and constant, defined once
-  run_pipeline.py     runs every step in order
   W5_Deliverable_3/   combine monthly snapshots, summary statistics, plots
   W6_Deliverable_4/   clean the Airbnb and bond data
   W7_Deliverable_5/   area codes and names, merge, analysis (Q1–Q3)
@@ -34,23 +36,45 @@ pip install -r requirements.txt
 
 | File | Where it comes from |
 |---|---|
-| `listings_2025-10.csv` … `listings_2026-06.csv` (9 files, one per month) | [Inside Airbnb](https://insideairbnb.com/get-the-data/) → New Zealand → the summary `listings.csv` for each month from Oct 2025 to Jun 2026. Rename each download to `listings_YYYY-MM.csv`. |
+| `listings_YYYY-MM.csv`, one per month (currently `listings_2025-10.csv` … `listings_2026-08.csv`, 11 files) | [Inside Airbnb](https://insideairbnb.com/get-the-data/) → New Zealand → the summary `listings.csv` for each month. Rename each download to `listings_YYYY-MM.csv`. The pipeline uses every file with this name pattern. |
 | `Detailed-Quarterly-Tenancy-Q1-2020-Q3-2026.csv` | [Tenancy Services rental bond data](https://www.tenancy.govt.nz/about-tenancy-services/data-and-statistics/rental-bond-data/) → detailed quarterly report |
 
-**3. Add the Stats NZ API key** (only needed the first time, to look up area codes): copy `.env.example` to `.env` in the
-project root and paste your [Stats NZ Datafinder](https://datafinder.stats.govt.nz/) key.
+**3. Add the Stats NZ API key** (needed whenever there are listing locations not looked up before): copy
+`.env.example` to `.env` in the project root and paste your [Stats NZ Datafinder](https://datafinder.stats.govt.nz/) key.
 
-**4. Run the whole pipeline** (from any folder):
+**4. Run the whole pipeline** from the project root, with either command:
 
 ```bash
-python src/run_pipeline.py
+make                     # reruns only the steps whose script or inputs changed
+python run_pipeline.py   # no make needed; reruns every step
 ```
 
-This rebuilds everything in `data/interim/`, `data/processed/` and `output/` from the raw files, and stops with a clear
-message if a file is missing or a sanity check fails. The two Stats NZ lookups (area codes, then area names
-such as 327000 = Christchurch Central-East) are slow and show a progress bar. Once `data/interim/airbnb_with_area_codes.csv`
-and `data/interim/sa2_area_names.csv` exist they are reused; add `--refresh-area-codes` to query the API again.
+Both rebuild `data/interim/`, `data/processed/` and `output/` from the raw files, and stop with a clear message if a
+file is missing, a monthly file has different columns, or a sanity check fails. The Stats NZ lookups (area codes,
+then area names such as 327000 = Christchurch Central-East) are incremental: locations already in
+`data/interim/airbnb_with_area_codes.csv` are reused and only new ones are sent to the API, so the step takes seconds
+when nothing is new. `python run_pipeline.py --refresh-area-codes` ignores the saved lookups and queries everything
+again. `make clean` deletes the generated files (but keeps the saved lookups); `make clean-all` deletes those too.
 Each script in `src/` can also be run on its own.
+
+If Quarto is installed, the last step renders `report.html` from `report.qmd`; otherwise it is skipped.
+
+## To add a new month
+
+1. **Download** the New Zealand `listings.csv` for the new month from [Inside Airbnb](https://insideairbnb.com/get-the-data/).
+2. **Rename** it to `listings_YYYY-MM.csv` (e.g. `listings_2026-09.csv`) and put it in `data/raw/`.
+3. **Run one command:** `make` (or `python run_pipeline.py`).
+
+The months, bond quarters, plot titles and the "latest snapshot" plots all follow the files in `data/raw/`. If the
+new month's quarter is not in the bond file yet, the pipeline warns and those listings have no rent data until a newer
+bond file is downloaded (keep the same file name, or update `BOND_RAW` in `src/config.py` and the `Makefile`).
+
+## Installing make and Quarto (optional, Windows)
+
+```bash
+winget install ezwinports.make   # then open a new terminal; check with: make --version
+winget install Posit.Quarto      # for report.qmd; also needs: pip install jupyter
+```
 
 # AirBNB Data
 
@@ -58,7 +82,7 @@ Each script in `src/` can also be run on its own.
 
 - **Dataset:** `listings.csv`
 - **Country:** New Zealand
-- **Snapshot:** June 2026
+- **Snapshots:** one per month, from October 2025
 - **Source:** [Inside Airbnb – Get the Data](https://insideairbnb.com/get-the-data/)
 
 Inside Airbnb is an independent, non-commercial project that provides publicly available Airbnb listing data for research and analysis. The data is collected from publicly accessible information on the Airbnb website and is intended to help researchers, policymakers, and the public better understand the short-term rental market.

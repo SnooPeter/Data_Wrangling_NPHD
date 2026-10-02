@@ -74,8 +74,14 @@ def main():
         status = "PASS" if passed else "FAIL"
         print(f"[{status}] {description}" + (f" ({detail})" if detail else ""))
 
-    missing = merged["Median Rent"].isna().mean() * 100
-    print(f"\nInfo: {missing:.1f}% of rows have no Median Rent (suppressed by Tenancy Services).")
+    # Months whose quarter is not in the bond file yet cannot have a rent; report them separately.
+    bond_quarters = set(pd.read_csv(config.require(config.BOND_CLEAN), usecols=["TimeFrame"])["TimeFrame"].str[:7])
+    no_quarter = ~config.quarter_key(merged["month_year"]).isin(bond_quarters)
+    suppressed = merged["Median Rent"].isna() & ~no_quarter
+    print(f"\nInfo: {suppressed.mean() * 100:.1f}% of rows have no Median Rent (suppressed by Tenancy Services).")
+    if no_quarter.any():
+        months = ", ".join(merged.loc[no_quarter, "month_year"].unique())
+        print(f"Info: {no_quarter.sum():,} rows ({months}) have no bond data yet: their quarter is not in the bond file.")
 
     failures = [r for r in results if not r[1]]
     if failures:

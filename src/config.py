@@ -25,11 +25,11 @@ ENV_FILE = PROJECT_ROOT / ".env"
 
 # --- Raw inputs (download these into data/raw/, see README) ---
 # One Inside Airbnb NZ listings.csv per month, saved as listings_YYYY-MM.csv.
+# The months are read from the file names, so adding a month = dropping in a new file.
 AIRBNB_SNAPSHOT_PATTERN = "listings_????-??.csv"
-AIRBNB_SNAPSHOT_MONTHS = [
-    "2025-10", "2025-11", "2025-12", "2026-01", "2026-02",
-    "2026-03", "2026-04", "2026-05", "2026-06",
-]
+AIRBNB_SNAPSHOT_MONTHS = sorted(
+    path.stem.removeprefix("listings_") for path in RAW_DIR.glob(AIRBNB_SNAPSHOT_PATTERN)
+)
 BOND_RAW = RAW_DIR / "Detailed-Quarterly-Tenancy-Q1-2020-Q3-2026.csv"
 
 # --- Interim files (the comment names the script that writes each one) ---
@@ -51,8 +51,6 @@ D5_OUTPUT_DIR = OUTPUT_DIR / "W7_Deliverable_5"
 
 # --- Constants ---
 CITY = "Christchurch City"
-# Bond quarters that overlap the Airbnb snapshots (Oct 2025 -> Jun 2026).
-BOND_QUARTERS = ["2025-10-01", "2026-01-01", "2026-04-01"]
 # Bond rows that summarise all dwelling types and bedroom counts for an area.
 ALL_CATEGORY = "ALL"
 CHRISTCHURCH_CENTRAL_SA2 = "326600"
@@ -74,7 +72,7 @@ def require(path):
         raise FileNotFoundError(
             f"Missing input file: {path}\n"
             "If it is a raw file, see the README for what to download into data/raw/.\n"
-            "Otherwise run the earlier pipeline steps first (python src/run_pipeline.py)."
+            "Otherwise run the earlier pipeline steps first (python run_pipeline.py or make)."
         )
     return path
 
@@ -83,6 +81,40 @@ def month_label(year_month):
     """'2025-10' -> 'Oct 2025' (the month_year format used throughout the pipeline)."""
     year, month = year_month.split("-")
     return f"{MONTH_NAMES[int(month) - 1]} {year}"
+
+
+def latest_snapshot():
+    """Path of the newest monthly snapshot in data/raw/."""
+    if not AIRBNB_SNAPSHOT_MONTHS:
+        raise FileNotFoundError(f"No files matching {AIRBNB_SNAPSHOT_PATTERN} in {RAW_DIR} (see README).")
+    return RAW_DIR / f"listings_{AIRBNB_SNAPSHOT_MONTHS[-1]}.csv"
+
+
+def reference_date(last_review):
+    """Stand-in for the snapshot date: the most recent review in the data.
+
+    Inside Airbnb does not put the scrape date in listings.csv, but no review can be
+    newer than the scrape, and busy listings are reviewed almost daily, so the latest
+    last_review is within a few days of it.
+    """
+    return pd.to_datetime(last_review, errors="coerce").max().normalize()
+
+
+def quarter_start(year_month):
+    """'2026-08' -> '2026-07-01': first day of the quarter, as in the bond TimeFrame column."""
+    year, month = year_month.split("-")
+    return f"{year}-{(int(month) - 1) // 3 * 3 + 1:02d}-01"
+
+
+def snapshot_range_label():
+    """'Oct 2025 - Aug 2026': the months covered by the snapshots, for titles and messages."""
+    if not AIRBNB_SNAPSHOT_MONTHS:
+        return "no snapshots"
+    return f"{month_label(AIRBNB_SNAPSHOT_MONTHS[0])} - {month_label(AIRBNB_SNAPSHOT_MONTHS[-1])}"
+
+
+# Bond quarters that overlap the Airbnb snapshots, one per quarter (in date order).
+BOND_QUARTERS = sorted({quarter_start(month) for month in AIRBNB_SNAPSHOT_MONTHS})
 
 
 def quarter_key(month_year):

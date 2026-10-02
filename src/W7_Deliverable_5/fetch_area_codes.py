@@ -2,10 +2,15 @@
 
 Original author: Jin.
 
-This is the only step that needs the internet and an API key: put
-STATS_NZ_API_KEY=... in a .env file at the project root (see .env.example).
-The result is saved, so run_pipeline.py skips this step when it already exists.
+Incremental: the coordinate -> area code pairs already in the saved output are
+reused, and only coordinates not seen before are sent to the API. When nothing
+is new the step finishes in seconds and needs no internet or API key.
+Use --refresh to ignore the saved codes and query every coordinate again.
+
+New queries need an API key: put STATS_NZ_API_KEY=... in a .env file at the
+project root (see .env.example).
 """
+import argparse
 import os
 import sys
 from concurrent.futures import ThreadPoolExecutor
@@ -74,24 +79,50 @@ def query_many(coords, api_key, description):
         return list(tqdm(results, total=len(coords), desc=description, unit="request"))
 
 
+def saved_area_codes():
+    """(lat, lon) -> area code from the previous run's output, or {} if there is none.
+
+    Coordinates that failed last time (no code) are left out, so they are retried.
+    """
+    if not config.AIRBNB_WITH_AREA_CODES.exists():
+        return {}
+    saved = pd.read_csv(
+        config.AIRBNB_WITH_AREA_CODES,
+        usecols=["latitude", "longitude", "area_code"],
+        dtype={"area_code": "string"},
+    ).dropna()
+    saved["area_code"] = config.clean_area_code(saved["area_code"])
+    return dict(zip(zip(saved["latitude"], saved["longitude"]), saved["area_code"]))
+
+
 def main():
-    api_key = load_api_key()
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "--refresh", action="store_true", help="ignore the saved area codes and query every coordinate"
+    )
+    args = parser.parse_args()
+
     airbnb_df = pd.read_csv(config.require(config.CHCH_CLEAN))
 
-    # Many rows share a location, so query each unique coordinate pair only once.
+    # Many rows share a location, so look up each unique coordinate pair only once.
     coords = list(
         airbnb_df[["latitude", "longitude"]]
         .dropna()
         .drop_duplicates()
         .itertuples(index=False, name=None)
     )
-    print(f"Total rows: {len(airbnb_df):,} | Unique locations to query: {len(coords):,}")
+    coord_lookup = {} if args.refresh else saved_area_codes()
+    new_coords = [coord for coord in coords if coord not in coord_lookup]
+    print(
+        f"Total rows: {len(airbnb_df):,} | Unique locations: {len(coords):,} | "
+        f"Reused from saved file: {len(coords) - len(new_coords):,} | To query: {len(new_coords):,}"
+    )
 
-    areas = query_many(coords, api_key, "Looking up area codes")
-    coord_lookup = {
-        coord: area.get(config.SA2_2019_CODE_FIELD) if area else None
-        for coord, area in zip(coords, areas)
-    }
+    if new_coords:
+        api_key = load_api_key()
+        areas = query_many(new_coords, api_key, "Looking up area codes")
+        for coord, area in zip(new_coords, areas):
+            coord_lookup[coord] = area.get(config.SA2_2019_CODE_FIELD) if area else None
 
     airbnb_df["area_code"] = [
         coord_lookup.get((lat, lon))

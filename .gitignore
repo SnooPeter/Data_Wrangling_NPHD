@@ -269,3 +269,9 @@ Area_Code_Lookup.py
 others/W4 Deliverable 2/listings.csv
 others/W4 Deliverable 2/KNIME/Example Workflows/
 others/W4 Deliverable 2/KNIME/NPHD Pipeline/Example Workflows/
+
+# Deliverable 7: personal handover notes and Quarto build files
+HANDOVER_D7.md
+report.html
+report_files/
+.quarto/

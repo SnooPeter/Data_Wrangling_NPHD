@@ -36,7 +36,9 @@ def plot_top_gaps(location_gaps):
     bars = ax.barh(labels, top["median"], color="#2b5c8f")
     ax.bar_label(bars, labels=[f"${v:.2f}" for v in top["median"]], padding=5, fontsize=10)
     ax.set_title(
-        f"Top {config.TOP_N} Areas by Short- vs. Long-Term Price Gap", fontsize=14, pad=15
+        f"Top {config.TOP_N} Areas by Short- vs. Long-Term Price Gap ({config.snapshot_range_label()})",
+        fontsize=14,
+        pad=15,
     )
     ax.set_xlabel("Median Daily Price Gap ($)", fontsize=12)
     ax.set_ylabel("Area (SA2 code)", fontsize=12)

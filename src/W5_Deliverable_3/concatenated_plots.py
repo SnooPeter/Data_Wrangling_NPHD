@@ -1,4 +1,4 @@
-"""Deliverable 3: KNIME-style plots for the concatenated Christchurch dataset (Oct 2025 - Jun 2026)."""
+"""Deliverable 3: KNIME-style plots for the concatenated Christchurch dataset (all monthly snapshots)."""
 import sys
 from pathlib import Path
 
@@ -8,7 +8,6 @@ import pandas as pd
 sys.path.append(str(Path(__file__).resolve().parents[1]))  # lets this file find src/config.py
 import config
 
-REFERENCE_DATE = pd.Timestamp("2026-06-16")  # date of the latest (June 2026) snapshot
 MAX_PRICE = 2000
 
 
@@ -20,7 +19,7 @@ def price_histogram(df):
     ax.hist(priced["price"], bins=range(0, MAX_PRICE + 1, 100), color="#DD8452")
     ax.set_xlabel("Price ($NZD)")
     ax.set_ylabel("Number of records")
-    ax.set_title("Price Distribution — Christchurch City")
+    ax.set_title(f"Price Distribution — Christchurch City ({config.snapshot_range_label()})")
     fig.tight_layout()
     fig.savefig(config.D3_OUTPUT_DIR / "price_histogram_concatenated.png", dpi=150)
     plt.close(fig)
@@ -28,7 +27,8 @@ def price_histogram(df):
 
 def days_since_last_review_histogram(df):
     reviewed = df.dropna(subset=["last_review"]).copy()
-    reviewed["days_since_last_review"] = (REFERENCE_DATE - reviewed["last_review"]).dt.days
+    # Measured from the latest snapshot's date, as in the original KNIME workflow.
+    reviewed["days_since_last_review"] = (config.reference_date(df["last_review"]) - reviewed["last_review"]).dt.days
     reviewed = reviewed[reviewed["days_since_last_review"].between(0, 999)]
 
     fig, ax = plt.subplots(figsize=(9, 5))
@@ -37,7 +37,7 @@ def days_since_last_review_histogram(df):
     ax.set_xticks(review_bins)
     ax.set_xlabel("Days since last review")
     ax.set_ylabel("Number of records")
-    ax.set_title("Distribution of Days Since Last Review")
+    ax.set_title(f"Distribution of Days Since Last Review ({config.snapshot_range_label()})")
     fig.tight_layout()
     fig.savefig(config.D3_OUTPUT_DIR / "days_since_last_review_concatenated.png", dpi=150)
     plt.close(fig)
@@ -53,7 +53,7 @@ def top_10_percent_reviews(df):
     bars = ax.bar(["All concatenated records", config.CITY], counts, color=["#4C72B0", "#DD8452"])
     ax.bar_label(bars, padding=3)
     ax.set_ylabel("Number of records")
-    ax.set_title("Top 10% Most-Reviewed Records")
+    ax.set_title(f"Top 10% Most-Reviewed Records ({config.snapshot_range_label()})")
     ax.set_ylim(0, max(max(counts) * 1.12, 1))
     fig.tight_layout()
     fig.savefig(config.D3_OUTPUT_DIR / "top_10_percent_reviews_concatenated.png", dpi=150)

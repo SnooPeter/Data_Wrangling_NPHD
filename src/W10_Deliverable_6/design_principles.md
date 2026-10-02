@@ -84,7 +84,7 @@ Best practices from the Week 9 lectures that the project follows:
 
 - **Standard project layout.** `data/raw` → `data/interim` → `data/processed` → `output`, with code in `src/`.
   Raw data is read-only, and data flows one way: nothing reads from `output/`. Everything except `data/raw/` can be
-  deleted and rebuilt with one command (`python src/run_pipeline.py`).
+  deleted and rebuilt with one command (`make`, or `python run_pipeline.py` without make).
 - **Single source of truth (DRY).** Every path and constant (city name, quarters, SA2 layer, the SA2 code for
   Christchurch Central, days per week) is defined once in `src/config.py`. Shared logic, such as the quarter mapping and
   the join keys, is written once and reused. The duplicate table and chart scripts were merged.

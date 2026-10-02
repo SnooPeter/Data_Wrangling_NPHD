@@ -1,7 +1,7 @@
 """Deliverable 5, Q3: Airbnb listings vs long-term rentals in each area.
 
-Airbnb supply = unique listings seen in any snapshot (Oct 2025 - Jun 2026).
-Long-term supply = highest Active Bonds value for the area in the three quarters.
+Airbnb supply = unique listings seen in any monthly snapshot.
+Long-term supply = highest Active Bonds value for the area in the matching quarters.
 Note: the two counts cover different time windows (see W10_Deliverable_6/design_principles.md).
 Original author: Nic (table and chart were previously two separate scripts).
 """
@@ -47,7 +47,8 @@ def plot_top_supply(supply):
         color="#ff5a5f",
     )
     ax.set_title(
-        f"Housing Supply Breakdown: Airbnb vs. Long-Term Rentals (Top {config.TOP_N} Areas)",
+        f"Housing Supply Breakdown: Airbnb vs. Long-Term Rentals (Top {config.TOP_N} Areas, "
+        f"{config.snapshot_range_label()})",
         fontsize=14,
         pad=15,
     )

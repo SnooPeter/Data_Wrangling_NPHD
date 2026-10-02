@@ -1,7 +1,8 @@
 """Deliverable 3: build one Christchurch dataset from the monthly Inside Airbnb snapshots.
 
 Steps
-1. Load each monthly NZ listings.csv (Oct 2025 - Jun 2026) from data/raw/.
+1. Load each monthly NZ listings_YYYY-MM.csv found in data/raw/ and check that
+   every month has the same columns.
 2. Keep Christchurch City listings only.
 3. Add a month_year column (e.g. 'Oct 2025') saying which snapshot the row came from.
 4. Concatenate all months into one dataset -> data/interim/concatenate_chch.csv.
@@ -28,28 +29,40 @@ TOP_CATEGORIES = 10
 
 
 def snapshot_files():
-    """Return (path, 'Mon YYYY') for each expected monthly snapshot, in date order."""
-    files = []
-    missing = []
-    for year_month in config.AIRBNB_SNAPSHOT_MONTHS:
-        path = config.RAW_DIR / f"listings_{year_month}.csv"
-        if path.exists():
-            files.append((path, config.month_label(year_month)))
-        else:
-            missing.append(path.name)
-
-    if missing:
+    """Return (path, 'Mon YYYY') for each monthly snapshot in data/raw/, in date order."""
+    if not config.AIRBNB_SNAPSHOT_MONTHS:
         raise FileNotFoundError(
-            f"Missing Airbnb snapshots in {config.RAW_DIR}: {', '.join(missing)}\n"
+            f"No Airbnb snapshots matching {config.AIRBNB_SNAPSHOT_PATTERN} in {config.RAW_DIR}\n"
             "Download each month's NZ listings.csv from Inside Airbnb and save it as "
             "listings_YYYY-MM.csv (see README)."
         )
-    return files
+    return [
+        (config.RAW_DIR / f"listings_{year_month}.csv", config.month_label(year_month))
+        for year_month in config.AIRBNB_SNAPSHOT_MONTHS
+    ]
 
 
-def load_christchurch_snapshot(path, month_year):
-    """Load one NZ snapshot, keep Christchurch City only and label the month."""
+def check_columns(df, path, expected_columns):
+    """Stop if a monthly file's columns differ from the first month's.
+
+    Inside Airbnb sometimes adds or renames columns; concatenating such a file
+    would silently fill whole columns with missing values.
+    """
+    missing = [c for c in expected_columns if c not in df.columns]
+    extra = [c for c in df.columns if c not in expected_columns]
+    if missing or extra:
+        sys.exit(
+            f"[ERROR] {path.name} has different columns from the other months.\n"
+            f"  Missing columns: {missing or 'none'}\n"
+            f"  Extra columns:   {extra or 'none'}\n"
+            "Check that the right file was downloaded, or update the pipeline for the new columns."
+        )
+
+
+def load_christchurch_snapshot(path, month_year, expected_columns):
+    """Load one NZ snapshot, check its columns, keep Christchurch City only and label the month."""
     df = pd.read_csv(path)
+    check_columns(df, path, expected_columns)
     df = df[df["neighbourhood_group"] == config.CITY].copy()
     df["month_year"] = month_year
     print(f"  {path.name}: {len(df):,} Christchurch listings ({month_year})")
@@ -106,11 +119,15 @@ def categorical_summary(df):
 
 
 def main():
-    print(f"Loading snapshots from {config.RAW_DIR}")
+    files = snapshot_files()
+    print(f"Loading {len(files)} snapshots ({config.snapshot_range_label()}) from {config.RAW_DIR}")
+    # Every month is compared with the first month's header.
+    expected_columns = list(pd.read_csv(files[0][0], nrows=0).columns)
     christchurch = pd.concat(
-        [load_christchurch_snapshot(path, label) for path, label in snapshot_files()],
+        [load_christchurch_snapshot(path, label, expected_columns) for path, label in files],
         ignore_index=True,
     )
+    print("[PASS] All snapshots have the same columns")
 
     config.INTERIM_DIR.mkdir(parents=True, exist_ok=True)
     christchurch.to_csv(config.CHCH_CONCAT, index=False)
