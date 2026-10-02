@@ -1,35 +1,36 @@
 column,n_categories,category,count
-host_name,1422,Paula Kat Charlotte,1561
-host_name,1422,Care Property Stays,914
-host_name,1422,Managed By Williams,838
-host_name,1422,Ohana,744
-host_name,1422,Lily-SimplyHost,549
-host_name,1422,Bachcare,492
-host_name,1422,"Mayie, Judi And Karen At Bookahome",393
-host_name,1422,Hasslefree Accommodation,387
-host_name,1422,Paula Corinne,377
-host_name,1422,Min,345
-neighbourhood_group,1,Christchurch City,28795
-neighbourhood,16,Central Ward,10554
-neighbourhood,16,Banks Peninsula Ward,3548
-neighbourhood,16,Heathcote Ward,2074
-neighbourhood,16,Riccarton Ward,1885
-neighbourhood,16,Fendalton Ward,1605
-neighbourhood,16,Halswell Ward,1081
-neighbourhood,16,Spreydon Ward,1056
-neighbourhood,16,Innes Ward,1027
-neighbourhood,16,Cashmere Ward,1009
-neighbourhood,16,Harewood Ward,909
-room_type,4,Entire home/apt,22765
-room_type,4,Private room,5744
-room_type,4,Hotel room,251
-room_type,4,Shared room,35
-month_year,9,Jun 2026,3469
-month_year,9,May 2026,3361
-month_year,9,Apr 2026,3273
-month_year,9,Mar 2026,3227
-month_year,9,Feb 2026,3190
-month_year,9,Dec 2025,3180
-month_year,9,Jan 2026,3057
-month_year,9,Nov 2025,3047
-month_year,9,Oct 2025,2991
+host_name,1460,Paula Kat Charlotte,1911
+host_name,1460,Care Property Stays,1274
+host_name,1460,Managed By Williams,1167
+host_name,1460,Ohana,920
+host_name,1460,Lily-SimplyHost,733
+host_name,1460,Bachcare,592
+host_name,1460,"Mayie, Judi And Karen At Bookahome",523
+host_name,1460,Hasslefree Accommodation,515
+host_name,1460,Min,430
+host_name,1460,Sharon,385
+neighbourhood_group,1,Christchurch City,35796
+neighbourhood,16,Central Ward,13214
+neighbourhood,16,Banks Peninsula Ward,4358
+neighbourhood,16,Heathcote Ward,2562
+neighbourhood,16,Riccarton Ward,2318
+neighbourhood,16,Fendalton Ward,1949
+neighbourhood,16,Halswell Ward,1369
+neighbourhood,16,Spreydon Ward,1310
+neighbourhood,16,Innes Ward,1288
+neighbourhood,16,Cashmere Ward,1243
+neighbourhood,16,Coastal Ward,1119
+room_type,4,Entire home/apt,28291
+room_type,4,Private room,7161
+room_type,4,Hotel room,301
+room_type,4,Shared room,43
+month_year,11,Aug 2026,3513
+month_year,11,Jul 2026,3488
+month_year,11,Jun 2026,3469
+month_year,11,May 2026,3361
+month_year,11,Apr 2026,3273
+month_year,11,Mar 2026,3227
+month_year,11,Feb 2026,3190
+month_year,11,Dec 2025,3180
+month_year,11,Jan 2026,3057
+month_year,11,Nov 2025,3047
