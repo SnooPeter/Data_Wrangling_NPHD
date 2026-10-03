@@ -41,6 +41,8 @@ def main():
     print(f"Areas in data: {airbnb_df['area_code'].nunique()} | Reused: {len(saved)} | To query: {len(sample)}")
     if sample.empty:
         print(f"Nothing new to look up; {config.SA2_AREA_NAMES.name} is up to date.")
+        # Update the file date anyway, so make sees it as newer than its input.
+        config.SA2_AREA_NAMES.touch()
         return
 
     api_key = load_api_key()
