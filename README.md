@@ -49,6 +49,11 @@ requirements.txt      Python packages needed
 .env.example          template for the Stats NZ API key
 ```
 
+**Why `output/` is committed:** generated files are normally git-ignored, because the pipeline can rebuild them
+from the raw data and the code. We keep `output/` in the repository on purpose, so tutors can see the charts and
+result tables on GitHub without running the pipeline. Each run rewrites these files, so git may show them as changed
+even when the results are the same. If you do not mean to commit new results, run `git restore output/`.
+
 # How to Run
 
 **1. Install the packages** (Python 3.10 or newer):
