@@ -2,6 +2,31 @@
 
 DATA201–DATA422 collaborative project. This project uses New Zealand **Airbnb** data to explore the Christchurch rental market.
 
+# Deliverables
+
+| Deliverable | Topic | Where to find it |
+|---|---|---|
+| 1 | Git and GitHub setup | `others/W3 Deliverable 1/` |
+| 2 | KNIME workflow on the June 2026 snapshot | `others/W4 Deliverable 2/KNIME/` |
+| 3 | Combine monthly snapshots, summary statistics, plots | `src/W5_Deliverable_3/`, `output/W5_Deliverable_3/` |
+| 4 | Clean the Airbnb and bond data | `src/W6_Deliverable_4/`, including `cleaning_decisions.md` |
+| 5 | Area codes, merge (pandas and SQL), Q1 to Q3 | `src/W7_Deliverable_5/`, including `explanation.md`; results in `output/W7_Deliverable_5/` |
+| 6 | Best practices review, sanity checks, design principles | `src/W10_Deliverable_6/` |
+| 7 | Automation: new months with one command | `Makefile`, `run_pipeline.py`, section "To add a new month" below |
+| 8 | Final repository | this README |
+
+# Team
+
+| Name | GitHub | Main presenter |
+|---|---|---|
+| Peter Ra | [SnooPeter](https://github.com/SnooPeter) | Deliverables 2 and 8 |
+| Daniel Villena | [dvi25](https://github.com/dvi25) | Deliverables 4 and 7 |
+| HyunJin Lee | [hyunjinlee0131-wq](https://github.com/hyunjinlee0131-wq) | Deliverables 1 and 6 |
+| Nicholas Indrawan | [nicholasindra1](https://github.com/nicholasindra1) | Deliverables 3 and 5 |
+
+Some commits were made with AI coding assistants (shown as `claude` in the contributor list). The AI tool used is
+stated in `src/W10_Deliverable_6/design_principles.md`.
+
 # Project Structure
 
 ```
@@ -69,11 +94,17 @@ The months, bond quarters, plot titles and the "latest snapshot" plots all follo
 new month's quarter is not in the bond file yet, the pipeline warns and those listings have no rent data until a newer
 bond file is downloaded (keep the same file name, or update `BOND_RAW` in `src/config.py` and the `Makefile`).
 
-## Installing make and Quarto (optional, Windows)
+## Installing make and Quarto (optional)
 
 ```bash
 winget install ezwinports.make   # then open a new terminal; check with: make --version
 winget install Posit.Quarto      # for report.qmd; also needs: pip install jupyter
+```
+
+On macOS, make is usually already installed. Quarto can be installed with Homebrew:
+
+```bash
+brew install --cask quarto      # for report.qmd; also needs: pip install jupyter
 ```
 
 # AirBNB Data
